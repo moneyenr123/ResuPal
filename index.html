@@ -1,700 +1,468 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Resupal – AI Resume Builder</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" type="image/png" href="favicon.png" />
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+<meta charset="UTF-8" />
+<title>ResuPal – AI Resume Builder</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/png" href="favicon.png" />
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 
-  <style>
-    :root {
-      --bg: #050816;
-      --card: #0b1024;
-      --accent: #4f46e5;
-      --accent-2: #22c55e;
-      --text: #f9fafb;
-      --muted: #9ca3af;
-      --border: #1f2937;
-      --radius-md: 12px;
-      --radius-lg: 18px;
-      --radius-pill: 999px;
-      --shadow-soft: 0 18px 45px rgba(0,0,0,0.45);
-    }
+<style>
+/* --------------------------------------------------
+   ROOT + GLOBAL
+-------------------------------------------------- */
+:root {
+  --bg: #020617;
+  --bg2: #0a0f1f;
+  --glass: rgba(255,255,255,0.06);
+  --glass-border: rgba(255,255,255,0.12);
+  --accent: #6366f1;
+  --accent2: #22c55e;
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --radius: 18px;
+  --radius-md: 12px;
+  --radius-pill: 999px;
+  --shadow: 0 25px 60px rgba(0,0,0,0.55);
+  --glow: 0 0 40px rgba(99,102,241,0.45);
+}
 
-    body {
-      margin: 0;
-      font-family: system-ui, sans-serif;
-      background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
-      color: var(--text);
-    }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    header {
-      position: sticky;
-      top: 0;
-      backdrop-filter: blur(14px);
-      background: rgba(3,7,18,0.85);
-      border-bottom: 1px solid rgba(31,41,55,0.7);
-      z-index: 20;
-    }
+body {
+  font-family: system-ui, sans-serif;
+  background: radial-gradient(circle at top, #0f172a 0%, #020617 60%);
+  color: var(--text);
+  overflow-x: hidden;
+}
 
-    .nav {
-      max-width: 1120px;
-      margin: auto;
-      padding: 14px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+/* --------------------------------------------------
+   NAVBAR
+-------------------------------------------------- */
+nav {
+  width: 100%;
+  padding: 18px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(18px);
+  background: rgba(2,6,23,0.75);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  z-index: 50;
+}
 
-    .logo {
-      font-size: 20px;
-      font-weight: 700;
-    }
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
 
-    .nav-right {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
-    .btn {
-      padding: 8px 16px;
-      border-radius: var(--radius-pill);
-      font-weight: 600;
-      cursor: pointer;
-      border: 1px solid transparent;
-    }
+.plan-badge {
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  font-size: 12px;
+  color: #a5b4fc;
+  display: none;
+}
 
-    .btn-primary {
-      background: linear-gradient(135deg, #4f46e5, #6366f1);
-      color: white;
-    }
+.btn-ghost {
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255,255,255,0.15);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: 0.2s;
+}
 
-    .btn-ghost {
-      background: transparent;
-      border: 1px solid rgba(148,163,184,0.4);
-      color: var(--muted);
-    }
+.btn-ghost:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+}
 
-    .plan-badge {
-      padding: 4px 10px;
-      border-radius: var(--radius-pill);
-      background: rgba(15,23,42,0.9);
-      border: 1px solid rgba(55,65,81,0.9);
-      font-size: 11px;
-      color: #a5b4fc;
-      display: none;
-    }
+/* --------------------------------------------------
+   HERO SECTION
+-------------------------------------------------- */
+.hero {
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 0 28px;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
 
-    /* HERO */
-    .hero {
-      max-width: 1120px;
-      margin: auto;
-      padding: 40px 20px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-    }
+@media(max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
 
-    @media(max-width:900px){
-      .hero { grid-template-columns: 1fr; }
-    }
+.hero h1 {
+  font-size: 48px;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #fff, #a5b4fc, #6366f1);
+  -webkit-background-clip: text;
+  color: transparent;
+}
 
-    .hero h1 {
-      font-size: 40px;
-      margin-bottom: 10px;
-    }
+.hero p {
+  color: var(--muted);
+  font-size: 16px;
+  max-width: 480px;
+  margin-bottom: 24px;
+}
 
-    .hero-sub {
-      color: var(--muted);
-      margin-bottom: 20px;
-    }
+.hero-btn {
+  padding: 14px 26px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: white;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--glow);
+  transition: 0.2s;
+}
 
-    /* AI CARD */
-    .ai-card {
-      background: var(--card);
-      border-radius: 20px;
-      padding: 18px;
-      border: 1px solid rgba(55,65,81,0.9);
-      position: relative;
-    }
+.hero-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
 
-    .ai-output {
-      margin-top: 10px;
-      padding: 10px;
-      background: rgba(15,23,42,0.95);
-      border: 1px solid rgba(55,65,81,0.9);
-      border-radius: var(--radius-md);
-      max-height: 200px;
-      overflow: auto;
-      white-space: pre-wrap;
-      font-size: 13px;
-    }
+/* --------------------------------------------------
+   AI PREVIEW CARD
+-------------------------------------------------- */
+.ai-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 20px;
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow);
+  animation: float 6s ease-in-out infinite;
+}
 
-    .blurred {
-      filter: blur(6px);
-      pointer-events: none;
-      user-select: none;
-    }
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
 
-    .blur-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.55);
-      backdrop-filter: blur(4px);
-      border-radius: inherit;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: var(--muted);
-      font-size: 14px;
-      text-align: center;
-      padding: 20px;
-    }
+.ai-card h3 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
 
-  </style>
+.file-input {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.ai-btn {
+  margin-top: 12px;
+  padding: 10px 18px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.ai-output {
+  margin-top: 14px;
+  padding: 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-md);
+  max-height: 200px;
+  overflow: auto;
+  white-space: pre-wrap;
+  font-size: 14px;
+}
+
+/* --------------------------------------------------
+   PRICING SECTION
+-------------------------------------------------- */
+.pricing {
+  max-width: 1200px;
+  margin: 80px auto;
+  padding: 0 28px;
+}
+
+.pricing h2 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.pricing p {
+  color: var(--muted);
+  margin-bottom: 30px;
+}
+
+.price-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.price-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 20px;
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow);
+}
+
+.price-card h3 {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
+.price-card ul {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.price-btn {
+  margin-top: 16px;
+  padding: 10px 18px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------
+   FOOTER
+-------------------------------------------------- */
+footer {
+  text-align: center;
+  padding: 40px 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+</style>
 </head>
 
 <body>
-<header>
-  <div class="nav">
-    <div class="logo">Resupal</div>
 
-    <div class="nav-right">
-      <span id="planBadge" class="plan-badge"></span>
-      <div id="gSignIn"></div>
-      <button id="signOut" class="btn-ghost" style="display:none;">Sign out</button>
-    </div>
+<!-- NAV -->
+<nav>
+  <div class="logo">ResuPal</div>
+  <div class="nav-right">
+    <span id="planBadge" class="plan-badge"></span>
+    <div id="gSignIn"></div>
+    <button id="signOut" class="btn-ghost" style="display:none;">Sign out</button>
   </div>
-</header>
+</nav>
 
+<!-- HERO -->
 <section class="hero">
   <div>
     <h1>Human‑sounding resumes powered by AI</h1>
-    <p class="hero-sub">
-      Free users get AI previews. Standard & Pro unlock full text, unlimited rewrites, and stronger AI.
-    </p>
-
-    <button class="btn-primary btn" onclick="scrollToAI()">Try AI Free</button>
+    <p>Free users get full AI during testing. Standard & Pro unlock stronger rewriting and priority.</p>
+    <button class="hero-btn" onclick="scrollToAI()">Try AI Free</button>
   </div>
 
   <div class="ai-card" id="aiCard">
     <h3>AI Resume Rewriter</h3>
-
-    <input type="file" id="resumeFile" accept=".txt" style="margin-top:10px;" />
-    <button class="btn-primary btn" style="margin-top:10px;" onclick="runAI()">Rewrite with AI</button>
-
+    <input type="file" id="resumeFile" class="file-input" accept=".txt" />
+    <button class="ai-btn" onclick="runAI()">Rewrite with AI</button>
     <div id="aiOutput" class="ai-output" style="display:none;"></div>
-    <div id="blurOverlay" class="blur-overlay" style="display:none;">
-      Upgrade to unlock full AI output.
-    </div>
   </div>
 </section>
 
-<script>
-/* ------------------------------
-   CONFIG
------------------------------- */
-const AI_API_KEY = "YOUR_AI_API_KEY_HERE";
-const GOOGLE_CLIENT_ID = "383092202504-lgad2a094dnqm3rt7pjk0csb59h4e8ag.apps.googleusercontent.com";
-const STRIPE_STANDARD = "https://buy.stripe.com/test_9B628q99vgCvg4Q005eEo01";
-const STRIPE_PRO = "https://buy.stripe.com/test_bJeeVc5Xj0Dxf0M6oteEo00";
+<!-- PRICING -->
+<section class="pricing">
+  <h2>Pricing</h2>
+  <p>Testing mode: Free users get full AI. Standard & Pro unlock more power.</p>
 
-/* ------------------------------
-   PLAN LOGIC
------------------------------- */
-function getPlan(){
-  return localStorage.getItem("resupal_plan") || "free";
-}
+  <div class="price-grid">
 
-function setPlan(p){
-  localStorage.setItem("resupal_plan", p);
-  updatePlanBadge();
-}
-
-function updatePlanBadge(){
-  const badge = document.getElementById("planBadge");
-  const plan = getPlan();
-
-  if(plan === "free"){
-    badge.style.display = "none";
-  } else {
-    badge.style.display = "inline-flex";
-    badge.textContent = plan === "standard" ? "Standard" : "Pro";
-  }
-}
-
-/* ------------------------------
-   GOOGLE SIGN-IN
------------------------------- */
-window.onload = () => {
-  google.accounts.id.initialize({
-    client_id: GOOGLE_CLIENT_ID,
-    callback: handleGoogle
-  });
-
-  google.accounts.id.renderButton(
-    document.getElementById("gSignIn"),
-    { theme: "outline", size: "medium" }
-  );
-
-  updatePlanBadge();
-  restoreAuth();
-};
-
-function handleGoogle(res){
-  localStorage.setItem("resupal_google", "1");
-  document.getElementById("signOut").style.display = "inline-flex";
-}
-
-function restoreAuth(){
-  if(localStorage.getItem("resupal_google")){
-    document.getElementById("signOut").style.display = "inline-flex";
-  }
-}
-
-document.getElementById("signOut").onclick = () => {
-  localStorage.removeItem("resupal_google");
-  document.getElementById("signOut").style.display = "none";
-};
-
-/* ------------------------------
-   AI LOGIC
------------------------------- */
-async function runAI(){
-  const file = document.getElementById("resumeFile").files[0];
-  if(!file) return alert("Upload a .txt file first");
-
-  const text = await file.text();
-  const output = document.getElementById("aiOutput");
-  const overlay = document.getElementById("blurOverlay");
-
-  output.style.display = "block";
-  output.textContent = "Processing with AI...";
-
-  const improved = await callAI(text);
-  output.textContent = improved;
-
-  const plan = getPlan();
-  if(plan === "free"){
-    output.classList.add("blurred");
-    overlay.style.display = "flex";
-  } else {
-    output.classList.remove("blurred");
-    overlay.style.display = "none";
-  }
-}
-
-async function callAI(text){
-  const body = {
-    contents: [{ parts: [{ text: `
-Rewrite this resume text to be clearer, more human, and more impactful.
-Keep facts real. Improve structure. Add light metrics if reasonable.
-
-${text}
-` }]}]
-  };
-
-  const res = await fetch(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + AI_API_KEY,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    }
-  );
-
-  const data = await res.json();
-  return data?.candidates?.[0]?.content?.parts?.map(p => p.text).join("") || "AI error.";
-}
-
-/* ------------------------------
-   HELPERS
------------------------------- */
-function scrollToAI(){
-  document.getElementById("aiCard").scrollIntoView({ behavior:"smooth" });
-}
-</script>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Resupal – AI Resume Builder</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" type="image/png" href="favicon.png" />
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-
-  <style>
-    :root {
-      --bg: #050816;
-      --card: #0b1024;
-      --accent: #4f46e5;
-      --accent-2: #22c55e;
-      --text: #f9fafb;
-      --muted: #9ca3af;
-      --border: #1f2937;
-      --radius-md: 12px;
-      --radius-lg: 18px;
-      --radius-pill: 999px;
-      --shadow-soft: 0 18px 45px rgba(0,0,0,0.45);
-    }
-
-    body {
-      margin: 0;
-      font-family: system-ui, sans-serif;
-      background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
-      color: var(--text);
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      backdrop-filter: blur(14px);
-      background: rgba(3,7,18,0.85);
-      border-bottom: 1px solid rgba(31,41,55,0.7);
-      z-index: 20;
-    }
-
-    .nav {
-      max-width: 1120px;
-      margin: auto;
-      padding: 14px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    .nav-right {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .btn {
-      padding: 8px 16px;
-      border-radius: var(--radius-pill);
-      font-weight: 600;
-      cursor: pointer;
-      border: 1px solid transparent;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #4f46e5, #6366f1);
-      color: white;
-    }
-
-    .btn-ghost {
-      background: transparent;
-      border: 1px solid rgba(148,163,184,0.4);
-      color: var(--muted);
-    }
-
-    .plan-badge {
-      padding: 4px 10px;
-      border-radius: var(--radius-pill);
-      background: rgba(15,23,42,0.9);
-      border: 1px solid rgba(55,65,81,0.9);
-      font-size: 11px;
-      color: #a5b4fc;
-      display: none;
-    }
-
-    /* HERO */
-    .hero {
-      max-width: 1120px;
-      margin: auto;
-      padding: 40px 20px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-    }
-
-    @media(max-width:900px){
-      .hero { grid-template-columns: 1fr; }
-    }
-
-    .hero h1 {
-      font-size: 40px;
-      margin-bottom: 10px;
-    }
-
-    .hero-sub {
-      color: var(--muted);
-      margin-bottom: 20px;
-    }
-
-    /* AI CARD */
-    .ai-card {
-      background: var(--card);
-      border-radius: 20px;
-      padding: 18px;
-      border: 1px solid rgba(55,65,81,0.9);
-      position: relative;
-    }
-
-    .ai-output {
-      margin-top: 10px;
-      padding: 10px;
-      background: rgba(15,23,42,0.95);
-      border: 1px solid rgba(55,65,81,0.9);
-      border-radius: var(--radius-md);
-      max-height: 200px;
-      overflow: auto;
-      white-space: pre-wrap;
-      font-size: 13px;
-    }
-
-    .blurred {
-      filter: blur(6px);
-      pointer-events: none;
-      user-select: none;
-    }
-
-    .blur-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.55);
-      backdrop-filter: blur(4px);
-      border-radius: inherit;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: var(--muted);
-      font-size: 14px;
-      text-align: center;
-      padding: 20px;
-    }
-
-  </style>
-</head>
-
-<body>
-<header>
-  <div class="nav">
-    <div class="logo">Resupal</div>
-
-    <div class="nav-right">
-      <span id="planBadge" class="plan-badge"></span>
-      <div id="gSignIn"></div>
-      <button id="signOut" class="btn-ghost" style="display:none;">Sign out</button>
+    <div class="price-card">
+      <h3>Free</h3>
+      <p>$0</p>
+      <ul>
+        <li>Full AI (testing mode)</li>
+        <li>Basic rewrite</li>
+      </ul>
+      <button class="price-btn" onclick="setPlan('free')">Stay Free</button>
     </div>
-  </div>
-</header>
 
-<section class="hero">
-  <div>
-    <h1>Human‑sounding resumes powered by AI</h1>
-    <p class="hero-sub">
-      Free users get AI previews. Standard & Pro unlock full text, unlimited rewrites, and stronger AI.
-    </p>
-
-    <button class="btn-primary btn" onclick="scrollToAI()">Try AI Free</button>
-  </div>
-
-  <div class="ai-card" id="aiCard">
-    <h3>AI Resume Rewriter</h3>
-
-    <input type="file" id="resumeFile" accept=".txt" style="margin-top:10px;" />
-    <button class="btn-primary btn" style="margin-top:10px;" onclick="runAI()">Rewrite with AI</button>
-
-    <div id="aiOutput" class="ai-output" style="display:none;"></div>
-    <div id="blurOverlay" class="blur-overlay" style="display:none;">
-      Upgrade to unlock full AI output.
+    <div class="price-card">
+      <h3>Standard</h3>
+      <p>$6 / month</p>
+      <ul>
+        <li>Full AI output</li>
+        <li>Unlimited rewrites</li>
+        <li>Better structure</li>
+      </ul>
+      <button class="price-btn" onclick="upgradeStandard()">Get Standard</button>
     </div>
+
+    <div class="price-card">
+      <h3>Pro</h3>
+      <p>$10 / month</p>
+      <ul>
+        <li>Everything in Standard</li>
+        <li>Stronger AI rewriting</li>
+        <li>Priority processing</li>
+      </ul>
+      <button class="price-btn" onclick="upgradePro()">Upgrade to Pro</button>
+    </div>
+
   </div>
 </section>
 
-<script>
-/* ------------------------------
-   CONFIG
------------------------------- */
-const AI_API_KEY = "YOUR_AI_API_KEY_HERE";
-const GOOGLE_CLIENT_ID = "383092202504-lgad2a094dnqm3rt7pjk0csb59h4e8ag.apps.googleusercontent.com";
-const STRIPE_STANDARD = "https://buy.stripe.com/test_9B628q99vgCvg4Q005eEo01";
-const STRIPE_PRO = "https://buy.stripe.com/test_bJeeVc5Xj0Dxf0M6oteEo00";
-
-/* ------------------------------
-   PLAN LOGIC
------------------------------- */
-function getPlan(){
-  return localStorage.getItem("resupal_plan") || "free";
-}
-
-function setPlan(p){
-  localStorage.setItem("resupal_plan", p);
-  updatePlanBadge();
-}
-
-function updatePlanBadge(){
-  const badge = document.getElementById("planBadge");
-  const plan = getPlan();
-
-  if(plan === "free"){
-    badge.style.display = "none";
-  } else {
-    badge.style.display = "inline-flex";
-    badge.textContent = plan === "standard" ? "Standard" : "Pro";
-  }
-}
-
-/* ------------------------------
-   GOOGLE SIGN-IN
------------------------------- */
-window.onload = () => {
-  google.accounts.id.initialize({
-    client_id: GOOGLE_CLIENT_ID,
-    callback: handleGoogle
-  });
-
-  google.accounts.id.renderButton(
-    document.getElementById("gSignIn"),
-    { theme: "outline", size: "medium" }
-  );
-
-  updatePlanBadge();
-  restoreAuth();
-};
-
-function handleGoogle(res){
-  localStorage.setItem("resupal_google", "1");
-  document.getElementById("signOut").style.display = "inline-flex";
-}
-
-function restoreAuth(){
-  if(localStorage.getItem("resupal_google")){
-    document.getElementById("signOut").style.display = "inline-flex";
-  }
-}
-
-document.getElementById("signOut").onclick = () => {
-  localStorage.removeItem("resupal_google");
-  document.getElementById("signOut").style.display = "none";
-};
-
-/* ------------------------------
-   AI LOGIC
------------------------------- */
-async function runAI(){
-  const file = document.getElementById("resumeFile").files[0];
-  if(!file) return alert("Upload a .txt file first");
-
-  const text = await file.text();
-  const output = document.getElementById("aiOutput");
-  const overlay = document.getElementById("blurOverlay");
-
-  output.style.display = "block";
-  output.textContent = "Processing with AI...";
-
-  const improved = await callAI(text);
-  output.textContent = improved;
-
-  const plan = getPlan();
-  if(plan === "free"){
-    output.classList.add("blurred");
-    overlay.style.display = "flex";
-  } else {
-    output.classList.remove("blurred");
-    overlay.style.display = "none";
-  }
-}
-
-async function callAI(text){
-  const body = {
-    contents: [{ parts: [{ text: `
-Rewrite this resume text to be clearer, more human, and more impactful.
-Keep facts real. Improve structure. Add light metrics if reasonable.
-
-${text}
-` }]}]
-  };
-
-  const res = await fetch(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + AI_API_KEY,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    }
-  );
-
-  const data = await res.json();
-  return data?.candidates?.[0]?.content?.parts?.map(p => p.text).join("") || "AI error.";
-}
-
-/* ------------------------------
-   HELPERS
------------------------------- */
-function scrollToAI(){
-  document.getElementById("aiCard").scrollIntoView({ behavior:"smooth" });
-}
-</script>
-
-</body>
-</html>
-<!-- FOOTER -->
-<footer style="
-  border-top:1px solid rgba(31,41,55,0.7);
-  padding:20px;
-  text-align:center;
-  color:#9ca3af;
-  font-size:13px;
-">
-  © <span id="year"></span> Resupal — Smart AI Resume Builder
+<footer>
+  © <span id="year"></span> ResuPal — Smart AI Resume Builder
 </footer>
 
 <script>
 /* ------------------------------
-   YEAR
+   CONFIG
 ------------------------------ */
-document.getElementById("year").textContent = new Date().getFullYear();
+const AI_API_KEY = "YOUR_AI_API_KEY_HERE";
+const GOOGLE_CLIENT_ID = "383092202504-lgad2a094dnqm3rt7pjk0csb59h4e8ag.apps.googleusercontent.com";
+const STRIPE_STANDARD = "https://buy.stripe.com/test_9B628q99vgCvg4Q005eEo01";
+const STRIPE_PRO = "https://buy.stripe.com/test_bJeeVc5Xj0Dxf0M6oteEo00";
+
+/* ------------------------------
+   PLAN LOGIC
+------------------------------ */
+function getPlan(){ return localStorage.getItem("resupal_plan") || "free"; }
+function setPlan(p){ localStorage.setItem("resupal_plan", p); updatePlanBadge(); }
+
+function updatePlanBadge(){
+  const badge = document.getElementById("planBadge");
+  const plan = getPlan();
+  if(plan === "free"){ badge.style.display = "none"; }
+  else {
+    badge.style.display = "inline-flex";
+    badge.textContent = plan === "standard" ? "Standard" : "Pro";
+  }
+}
+
+/* ------------------------------
+   GOOGLE SIGN-IN
+------------------------------ */
+window.onload = () => {
+  google.accounts.id.initialize({
+    client_id: GOOGLE_CLIENT_ID,
+    callback: handleGoogle
+  });
+
+  google.accounts.id.renderButton(
+    document.getElementById("gSignIn"),
+    { theme: "outline", size: "medium" }
+  );
+
+  restoreAuth();
+  updatePlanBadge();
+  document.getElementById("year").textContent = new Date().getFullYear();
+};
+
+function handleGoogle(res){
+  localStorage.setItem("resupal_google","1");
+  document.getElementById("signOut").style.display = "inline-flex";
+}
+
+function restoreAuth(){
+  if(localStorage.getItem("resupal_google")){
+    document.getElementById("signOut").style.display = "inline-flex";
+  }
+}
+
+document.getElementById("signOut").onclick = () => {
+  localStorage.removeItem("resupal_google");
+  document.getElementById("signOut").style.display = "none";
+};
+
+/* ------------------------------
+   AI LOGIC (testing mode = full AI)
+------------------------------ */
+async function runAI(){
+  const file = document.getElementById("resumeFile").files[0];
+  if(!file) return alert("Upload a .txt file first");
+
+  const text = await file.text();
+  const output = document.getElementById("aiOutput");
+
+  output.style.display = "block";
+  output.textContent = "Processing with AI...";
+
+  const improved = await callAI(text);
+  output.textContent = improved;
+}
+
+async function callAI(text){
+  const body = {
+    contents: [{ parts: [{ text: `
+Rewrite this resume text to be clearer, more human, and more impactful.
+Keep facts real. Improve structure. Add light metrics if reasonable.
+
+${text}
+` }]}]
+  };
+
+  const res = await fetch(
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + AI_API_KEY,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    }
+  );
+
+  const data = await res.json();
+  return data?.candidates?.[0]?.content?.parts?.map(p => p.text).join("") || "AI error.";
+}
 
 /* ------------------------------
    UPGRADE BUTTONS
 ------------------------------ */
 function upgradeStandard(){
-  localStorage.setItem("resupal_plan","standard");
-  updatePlanBadge();
+  setPlan("standard");
   window.location.href = STRIPE_STANDARD;
 }
 
 function upgradePro(){
-  localStorage.setItem("resupal_plan","pro");
-  updatePlanBadge();
+  setPlan("pro");
   window.location.href = STRIPE_PRO;
 }
 
 /* ------------------------------
-   UNBLUR WHEN PLAN CHANGES
+   HELPERS
 ------------------------------ */
-function applyBlurState(){
-  const plan = getPlan();
-  const output = document.getElementById("aiOutput");
-  const overlay = document.getElementById("blurOverlay");
-
-  if(!output) return;
-
-  if(plan === "free"){
-    output.classList.add("blurred");
-    overlay.style.display = "flex";
-  } else {
-    output.classList.remove("blurred");
-    overlay.style.display = "none";
-  }
+function scrollToAI(){
+  document.getElementById("aiCard").scrollIntoView({ behavior:"smooth" });
 }
-
-applyBlurState();
 </script>
 
 </body>
 </html>
-
-
