@@ -1119,27 +1119,38 @@ You’ll see your improved bullet here. It will stay true to what you did, but s
     };
 
     /* UNIVERSAL AI CALLER (FIXED PARSER) */
-    async function callGemini(promptText) {
-      const body = {
-        contents: [
-          {
-            parts: [
-              {
-                text: promptText
-              }
-            ]
-          }
+   async function callGemini(promptText) {
+  const body = {
+    contents: [
+      {
+        role: "user",
+        parts: [
+          { text: promptText }
         ]
-      };
+      }
+    ]
+  };
 
-      const res = await fetch(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + AI_API_KEY,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body)
-        }
-      );
+  const res = await fetch(
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + AI_API_KEY,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    }
+  );
+
+  const data = await res.json();
+
+  const textOutput =
+    data?.candidates?.[0]?.content?.parts?.map(p => p.text).join("") ||
+    data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+    data?.candidates?.[0]?.content?.parts?.[0] ||
+    "AI error.";
+
+  return textOutput;
+}
+
 
       const data = await res.json();
 
@@ -1181,7 +1192,7 @@ You’ll see your improved bullet here. It will stay true to what you did, but s
 
       const prompt = `
 Rewrite this single resume bullet to be clearer, more specific, and more impactful.
-Keep it truthful. Add light metrics only if they are implied.
+Keep it truthful. Add light metrics only if they are implied. and make it very human
 
 Bullet:
 ${input}
