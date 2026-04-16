@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Resupal – Smart AI Resume Builder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-alt: #070b1f;
+      --card: #0b1024;
+      --accent: #4f46e5;
+      --accent-soft: rgba(79, 70, 229, 0.18);
+      --accent-2: #22c55e;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --border: #1f2937;
+      --danger: #f97373;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.45);
+      --shadow-glow: 0 0 40px rgba(79, 70, 229, 0.45);
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(
+        to bottom,
+        rgba(3, 7, 18, 0.95),
+        rgba(3, 7, 18, 0.7),
+        transparent
+      );
+      border-bottom: 1px solid rgba(31, 41, 55, 0.7);
+    }
+
+    .nav {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-circle {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, #a5b4fc, #4f46e5 45%, #1d1b4b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-glow);
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: 0.03em;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .brand-text span:first-child {
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .brand-text span:last-child {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-link {
+      font-size: 14px;
+      color: var(--muted);
+      padding: 6px 10px;
+      border-radius: 999px;
+      transition: 0.18s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--text);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .btn {
+      border-radius: var(--radius-pill);
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: white;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border-color: rgba(148, 163, 184, 0.4);
+    }
+
+    .btn-ghost:hover {
+      border-color: rgba(148, 163, 184, 0.8);
+      color: var(--text);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    main {
+      flex: 1;
+    }
+
+    .hero {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 40px 20px 72px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.1fr);
+      gap: 40px;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+        padding-top: 28px;
+      }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 14px;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #bbf7d0, #22c55e);
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.7);
+    }
+
+    .hero h1 {
+      font-size: clamp(32px, 4vw, 40px);
+      line-height: 1.1;
+      margin-bottom: 14px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, #a5b4fc, #4f46e5, #22c55e);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-sub {
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 480px;
+      margin-bottom: 18px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+
+    .hero-meta span {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .hero-footnote {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .hero-footnote strong {
+      color: #e5e7eb;
+      font-weight: 600;
+    }
+
+    .hero-right {
+      position: relative;
+    }
+
+    .card-main {
+      background: radial-gradient(circle at top left, #111827 0, #020617 55%);
+      border-radius: 24px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      padding: 18px 18px 16px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-main::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at 0 0, rgba(79, 70, 229, 0.22), transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #4f46e5, #22c55e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .card-header-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .card-header-text span:first-child {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .card-header-text span:last-child {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .pill {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      color: var(--muted);
+    }
+
+    .score-card {
+      margin-top: 4px;
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      padding: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .score-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .score-label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .score-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent-2);
+    }
+
+    .score-tag {
+      font-size: 11px;
+      color: #bbf7d0;
+      background: rgba(22, 163, 74, 0.18);
+      border-radius: 999px;
+      padding: 3px 8px;
+    }
+
+    .score-bars {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .score-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .score-row-label {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .bar {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(31, 41, 55, 0.9);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #22c55e, #4ade80);
+      width: 0;
+      transition: width 0.8s ease-out;
+    }
+
+    .score-note {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .score-note strong {
+      color: #e5e7eb;
+      font-weight: 600;
+    }
+
+    .bullet-card {
+      margin-top: 12px;
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .bullet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .bullet-chip {
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(30, 64, 175, 0.4);
+      color: #bfdbfe;
+      border: 1px solid rgba(59, 130, 246, 0.7);
+    }
+
+    .bullet-text {
+      font-size: 12px;
+      color: #e5e7eb;
+    }
+
+    .bullet-weak {
+      color: #fecaca;
+    }
+
+    .bullet-strong {
+      color: #bbf7d0;
+    }
+
+    .bullet-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 4px;
+    }
+
+    .btn-mini {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--muted);
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .btn-mini:hover {
+      color: var(--text);
+      border-color: rgba(148, 163, 184, 1);
+      background: rgba(15, 23, 42, 1);
+    }
+
+    .upload-card {
+      margin-top: 14px;
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px dashed rgba(75, 85, 99, 0.9);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-start;
+      position: relative;
+      z-index: 1;
+    }
+
+    .upload-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .upload-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .upload-input {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .upload-input input[type="file"] {
+      font-size: 11px;
+      color: var(--muted);
+      max-width: 180px;
+    }
+
+    .upload-status {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .upload-status span {
+      color: #a5b4fc;
+    }
+
+    .section {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 18px;
+      gap: 16px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .section-sub {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 420px;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .metrics-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      .metrics-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .metric-card {
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .metric-value {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .metric-tag {
+      font-size: 11px;
+      color: #a5b4fc;
+    }
+
+    .templates-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .templates-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      .templates-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .template-card {
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .template-thumb {
+      height: 120px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 1), rgba(30, 64, 175, 0.8));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .template-lines {
+      position: absolute;
+      inset: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .template-line {
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.7);
+      width: 70%;
+    }
+
+    .template-line.short {
+      width: 40%;
+      background: rgba(148, 163, 184, 0.5);
+    }
+
+    .template-line.accent {
+      width: 50%;
+      background: rgba(129, 140, 248, 0.9);
+    }
+
+    .template-name {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .template-meta {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .pricing-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .plan-card {
+      border-radius: var(--radius-lg);
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      padding: 16px 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+    }
+
+    .plan-card.highlight {
+      border-color: rgba(79, 70, 229, 0.9);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .plan-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .plan-price {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .plan-tagline {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .plan-list {
+      margin-top: 6px;
+      list-style: none;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .plan-list li::before {
+      content: "• ";
+      color: #a5b4fc;
+    }
+
+    .plan-cta {
+      margin-top: 10px;
+    }
+
+    footer {
+      border-top: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 18px 20px 26px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .footer-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <nav class="nav">
+        <div class="nav-left">
+          <div class="logo-circle">R</div>
+          <div class="brand-text">
+            <span>Resupal</span>
+            <span>AI Resume Builder</span>
+          </div>
+        </div>
+        <div class="nav-right">
+          <a href="#features" class="nav-link">Features</a>
+          <a href="#templates" class="nav-link">Templates</a>
+          <a href="#pricing" class="nav-link">Pricing</a>
+          <button class="btn btn-ghost" type="button">Sign in</button>
+          <button class="btn btn-primary" type="button" onclick="scrollToUpload()">Get started free</button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <!-- HERO -->
+      <section class="hero">
+        <div>
+          <div class="badge">
+            <span class="badge-dot"></span>
+            <span>AI‑powered resume assistant</span>
+          </div>
+          <h1>
+            The only <span>AI resume builder</span> you’ll ever need.
+          </h1>
+          <p class="hero-sub">
+            Resupal helps you turn your experience into sharp, metrics‑driven bullet points and
+            ATS‑friendly resumes that actually get seen.
+          </p>
+          <div class="hero-meta">
+            <span>No credit card required</span>
+            <span>Free plan forever</span>
+            <span>Setup in under 2 minutes</span>
+          </div>
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="button" onclick="scrollToUpload()">
+              Build my resume
+            </button>
+            <button class="btn btn-ghost" type="button" onclick="scrollToUpload()">
+              Upload existing resume
+            </button>
+          </div>
+          <p class="hero-footnote">
+            <strong>Resupal Score</strong> shows you how your resume looks to modern screening systems.
+          </p>
+        </div>
+
+        <!-- RIGHT CARD -->
+        <div class="hero-right">
+          <div class="card-main">
+            <div class="card-header">
+              <div class="card-header-left">
+                <div class="avatar">R</div>
+                <div class="card-header-text">
+                  <span>Resupal Score</span>
+                  <span>AI view of your resume</span>
+                </div>
+              </div>
+              <span class="pill">ATS‑ready analysis</span>
+            </div>
+
+            <div class="score-card">
+              <div class="score-top">
+                <div>
+                  <div class="score-label">Overall score</div>
+                  <div class="score-value" id="scoreValue">12 / 100</div>
+                </div>
+                <span class="score-tag" id="scoreTag">Needs work</span>
+              </div>
+              <div class="score-bars">
+                <div class="score-row">
+                  <div class="score-row-label">
+                    <span>Content quality</span>
+                    <span id="contentLabel">21 / 35</span>
+                  </div>
+                  <div class="bar">
+                    <div class="bar-fill" id="contentBar"></div>
+                  </div>
+                </div>
+                <div class="score-row">
+                  <div class="score-row-label">
+                    <span>ATS & structure</span>
+                    <span id="atsLabel">7 / 25</span>
+                  </div>
+                  <div class="bar">
+                    <div class="bar-fill" id="atsBar"></div>
+                  </div>
+                </div>
+                <div class="score-row">
+                  <div class="score-row-label">
+                    <span>Job alignment</span>
+                    <span id="jobLabel">3 / 25</span>
+                  </div>
+                  <div class="bar">
+                    <div class="bar-fill" id="jobBar"></div>
+                  </div>
+                </div>
+                <div class="score-row">
+                  <div class="score-row-label">
+                    <span>Writing clarity</span>
+                    <span id="writingLabel">1 / 10</span>
+                  </div>
+                  <div class="bar">
+                    <div class="bar-fill" id="writingBar"></div>
+                  </div>
+                </div>
+              </div>
+              <p class="score-note">
+                <strong>Tip:</strong> quantified impact, clear structure, and the right keywords can
+                dramatically boost your score.
+              </p>
+            </div>
+
+            <div class="bullet-card">
+              <div class="bullet-header">
+                <span>AI bullet point coach</span>
+                <span class="bullet-chip">Before → After</span>
+              </div>
+              <p class="bullet-text bullet-weak" id="weakBullet">
+                Weak: “Worked on backend tasks for the website and fixed bugs when needed.”
+              </p>
+              <p class="bullet-text bullet-strong" id="strongBullet">
+                Better: “Improved API response times by 42% by refactoring backend endpoints and
+                resolving high‑impact bugs, enhancing reliability for 50k+ monthly users.”
+              </p>
+              <div class="bullet-actions">
+                <button class="btn-mini" type="button" onclick="generateBullet()">
+                  Generate another example
+                </button>
+              </div>
+            </div>
+
+            <div class="upload-card" id="uploadCard">
+              <div class="upload-title">Upload your resume to get started</div>
+              <div class="upload-sub">
+                Resupal will scan your resume, estimate your score, and highlight the fastest wins.
+              </div>
+              <div class="upload-input">
+                <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" />
+                <button class="btn-mini" type="button" onclick="fakeAnalyze()">
+                  Analyze resume
+                </button>
+              </div>
+              <div class="upload-status" id="uploadStatus">
+                No file uploaded yet. <span>Supported: PDF, DOC, DOCX.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- METRICS / FEATURES -->
+      <section class="section" id="features">
+        <div class="section-header">
+          <div>
+            <div class="section-title">See what screening systems see.</div>
+            <p class="section-sub">
+              Resupal breaks your resume into clear categories so you know exactly what to fix:
+              structure, keywords, impact, and clarity.
+            </p>
+          </div>
+        </div>
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-label">ATS structure</div>
+            <div class="metric-value">Layout check</div>
+            <div class="metric-tag">Headings, sections, and parsing‑friendly formatting.</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Keyword coverage</div>
+            <div class="metric-value">Role match</div>
+            <div class="metric-tag">Align your skills with the job description.</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Impact & metrics</div>
+            <div class="metric-value">Quantified</div>
+            <div class="metric-tag">Turn tasks into measurable achievements.</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Writing quality</div>
+            <div class="metric-value">Polished</div>
+            <div class="metric-tag">Concise, active, and recruiter‑friendly language.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TEMPLATES -->
+      <section class="section" id="templates">
+        <div class="section-header">
+          <div>
+            <div class="section-title">ATS‑friendly templates that still look good.</div>
+            <p class="section-sub">
+              Start from clean, proven layouts designed to pass parsing systems while staying
+              readable and modern for humans.
+            </p>
+          </div>
+        </div>
+        <div class="templates-grid">
+          <div class="template-card">
+            <div class="template-thumb">
+              <div class="template-lines">
+                <div class="template-line accent"></div>
+                <div class="template-line"></div>
+                <div class="template-line"></div>
+                <div class="template-line short"></div>
+                <div class="template-line"></div>
+              </div>
+            </div>
+            <div class="template-name">Classic Focus</div>
+            <div class="template-meta">Simple, single‑column layout for maximum ATS compatibility.</div>
+          </div>
+          <div class="template-card">
+            <div class="template-thumb">
+              <div class="template-lines">
+                <div class="template-line accent"></div>
+                <div class="template-line"></div>
+                <div class="template-line short"></div>
+                <div class="template-line"></div>
+                <div class="template-line"></div>
+              </div>
+            </div>
+            <div class="template-name">Tech Impact</div>
+            <div class="template-meta">Perfect for engineers and technical roles with strong metrics.</div>
+          </div>
+          <div class="template-card">
+            <div class="template-thumb">
+              <div class="template-lines">
+                <div class="template-line accent"></div>
+                <div class="template-line"></div>
+                <div class="template-line"></div>
+                <div class="template-line short"></div>
+                <div class="template-line"></div>
+              </div>
+            </div>
+            <div class="template-name">Modern Hybrid</div>
+            <div class="template-meta">Balanced layout for career switchers and multi‑discipline profiles.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRICING -->
+      <section class="section" id="pricing">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Start free. Upgrade when you’re ready.</div>
+            <p class="section-sub">
+              Use Resupal on the free plan as long as you like. When you’re ready to accelerate your
+              search, unlock AI‑powered content and unlimited exports.
+            </p>
+          </div>
+        </div>
+        <div class="pricing-grid">
+          <div class="plan-card">
+            <div class="plan-name">Free</div>
+            <div class="plan-price">$0</div>
+            <div class="plan-tagline">Build a solid resume manually.</div>
+            <ul class="plan-list">
+              <li>Manual resume builder</li>
+              <li>1 basic ATS‑friendly template</li>
+              <li>Limited Resupal Score previews</li>
+              <li>Export as PDF</li>
+            </ul>
+            <div class="plan-cta">
+              <button class="btn btn-ghost" type="button" onclick="scrollToUpload()">
+                Create free resume
+              </button>
+            </div>
+          </div>
+
+          <div class="plan-card highlight">
+            <div class="plan-name">Pro</div>
+            <div class="plan-price">$12 / month</div>
+            <div class="plan-tagline">Supercharge your resume with AI.</div>
+            <ul class="plan-list">
+              <li>AI bullet point generator</li>
+              <li>AI summary & headline suggestions</li>
+              <li>Full Resupal Score breakdown</li>
+              <li>Unlimited resumes & exports</li>
+            </ul>
+            <div class="plan-cta">
+              <button class="btn btn-primary" type="button" onclick="scrollToUpload()">
+                Upgrade to Pro
+              </button>
+            </div>
+          </div>
+
+          <div class="plan-card">
+            <div class="plan-name">Job Search Bundle</div>
+            <div class="plan-price">$49 / 6 months</div>
+            <div class="plan-tagline">For your entire job hunt.</div>
+            <ul class="plan-list">
+              <li>Everything in Pro</li>
+              <li>Cover letter suggestions</li>
+              <li>Multiple role‑specific profiles</li>
+              <li>Priority support</li>
+            </ul>
+            <div class="plan-cta">
+              <button class="btn btn-ghost" type="button" onclick="scrollToUpload()">
+                Get bundle
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <div>© <span id="year"></span> Resupal. All rights reserved.</div>
+        <div class="footer-links">
+          <a href="#features">Features</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Simple fake analysis + animation
+    const bars = {
+      contentBar: 60,
+      atsBar: 40,
+      jobBar: 30,
+      writingBar: 20
+    };
+
+    function animateBars() {
+      Object.entries(bars).forEach(([id, value]) => {
+        const el = document.getElementById(id);
+        if (el) {
+          requestAnimationFrame(() => {
+            el.style.width = value + "%";
+          });
+        }
+      });
+    }
+
+    function scrollToUpload() {
+      const el = document.getElementById("uploadCard");
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    function fakeAnalyze() {
+      const fileInput = document.getElementById("resumeFile");
+      const status = document.getElementById("uploadStatus");
+      const scoreValue = document.getElementById("scoreValue");
+      const scoreTag = document.getElementById("scoreTag");
+
+      if (!fileInput.files.length) {
+        status.textContent = "Please choose a resume file first.";
+        status.style.color = "#fecaca";
+        return;
+      }
+
+      status.style.color = "";
+      status.innerHTML = "Analyzing <span>" + fileInput.files[0].name + "</span>…";
+
+      setTimeout(() => {
+        scoreValue.textContent = "78 / 100";
+        scoreTag.textContent = "Strong resume";
+        status.innerHTML =
+          "Analysis complete. Your Resupal Score has been updated. <span>Try improving bullets with AI.</span>";
+      }, 900);
+    }
+
+    const bulletPairs = [
+      {
+        weak: 'Weak: “Helped with different tasks on the app when needed.”',
+        strong:
+          'Better: “Shipped 8+ app features across 3 releases, reducing crash rate by 35% and improving store rating from 3.9 to 4.4.”'
+      },
+      {
+        weak: 'Weak: “Responsible for social media posts for the company.”',
+        strong:
+          'Better: “Grew social reach by 62% by planning and publishing data‑driven campaigns across TikTok, Instagram, and LinkedIn.”'
+      },
+      {
+        weak: 'Weak: “Worked with the team to support customers.”',
+        strong:
+          'Better: “Resolved 40+ support tickets per week with a 95% satisfaction score, cutting average response time from 12h to 3h.”'
+      }
+    ];
+
+    let bulletIndex = 0;
+
+    function generateBullet() {
+      bulletIndex = (bulletIndex + 1) % bulletPairs.length;
+      const pair = bulletPairs[bulletIndex];
+      document.getElementById("weakBullet").textContent = pair.weak;
+      document.getElementById("strongBullet").textContent = pair.strong;
+    }
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+    window.addEventListener("load", animateBars);
+  </script>
+</body>
+</html>
