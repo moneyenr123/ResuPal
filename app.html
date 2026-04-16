@@ -1,194 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Resupal App View</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root {
-      --bg: #020617;
-      --card: #0b1024;
-      --accent: #4f46e5;
-      --accent-2: #22c55e;
-      --text: #f9fafb;
-      --muted: #9ca3af;
-      --border: #1f2937;
-      --radius-md: 12px;
-      --radius-pill: 999px;
-      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        "Segoe UI", sans-serif;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: var(--font-main);
-      background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
-      color: var(--text);
-      -webkit-font-smoothing: antialiased;
-    }
-    .wrap {
-      max-width: 640px;
-      margin: 0 auto;
-      padding: 16px;
-    }
-    h1 {
-      font-size: 22px;
-      margin-bottom: 4px;
-    }
-    .sub {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-    .card {
-      background: var(--card);
-      border-radius: 16px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      padding: 14px;
-    }
-    .field-label {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-    textarea {
-      width: 100%;
-      min-height: 160px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #020617;
-      color: var(--text);
-      padding: 8px;
-      font-size: 13px;
-      resize: vertical;
-    }
-    .btn {
-      margin-top: 10px;
-      border-radius: var(--radius-pill);
-      padding: 8px 16px;
-      font-size: 14px;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      background: linear-gradient(135deg, #4f46e5, #6366f1);
-      color: white;
-      width: 100%;
-    }
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: default;
-    }
-    .status {
-      margin-top: 8px;
-      font-size: 11px;
-      color: var(--muted);
-    }
-    .output {
-      margin-top: 12px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #020617;
-      padding: 8px;
-      font-size: 13px;
-      white-space: pre-wrap;
-      max-height: 260px;
-      overflow: auto;
-    }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <h1>Resupal – AI Resume Helper</h1>
-    <p class="sub">
-      Paste your resume text below and Resupal will use Gemini to humanize and tighten your content.
-    </p>
-    <div class="card">
-      <div class="field-label">Your resume text</div>
-      <textarea id="resumeText" placeholder="Paste your resume here..."></textarea>
-      <button class="btn" id="aiBtn" type="button">Humanize with AI</button>
-      <div class="status" id="status">Ready.</div>
-      <div class="output" id="output" style="display:none;"></div>
-    </div>
-  </div>
+<!-- FOOTER -->
+<footer style="
+  border-top:1px solid rgba(31,41,55,0.7);
+  padding:20px;
+  text-align:center;
+  color:#9ca3af;
+  font-size:13px;
+">
+  © <span id="year"></span> Resupal — Smart AI Resume Builder
+</footer>
 
-  <script>
-    // 🔑 Use the same Gemini key here
-    const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE";
+<script>
+/* ------------------------------
+   YEAR
+------------------------------ */
+document.getElementById("year").textContent = new Date().getFullYear();
 
-    async function callGeminiHumanizer(rawText) {
-      if (!GEMINI_API_KEY || GEMINI_API_KEY === "YOUR_GEMINI_API_KEY_HERE") {
-        throw new Error("Missing Gemini API key");
-      }
+/* ------------------------------
+   UPGRADE BUTTONS
+------------------------------ */
+function upgradeStandard(){
+  localStorage.setItem("resupal_plan","standard");
+  updatePlanBadge();
+  window.location.href = STRIPE_STANDARD;
+}
 
-      const prompt = `
-You are an expert resume writer. Take the following resume text and:
-- Keep the user's real experience and facts.
-- Rewrite bullet points to be clear, concise, and human-sounding.
-- Add metrics or impact where reasonable (but don't invent wild numbers).
-- Keep it professional, not robotic.
-Return ONLY the improved resume text, no explanations.
+function upgradePro(){
+  localStorage.setItem("resupal_plan","pro");
+  updatePlanBadge();
+  window.location.href = STRIPE_PRO;
+}
 
-Resume text:
-${rawText}
-`;
+/* ------------------------------
+   UNBLUR WHEN PLAN CHANGES
+------------------------------ */
+function applyBlurState(){
+  const plan = getPlan();
+  const output = document.getElementById("aiOutput");
+  const overlay = document.getElementById("blurOverlay");
 
-      const body = {
-        contents: [
-          {
-            parts: [{ text: prompt }]
-          }
-        ]
-      };
+  if(!output) return;
 
-      const res = await fetch(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" +
-          encodeURIComponent(GEMINI_API_KEY),
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body)
-        }
-      );
+  if(plan === "free"){
+    output.classList.add("blurred");
+    overlay.style.display = "flex";
+  } else {
+    output.classList.remove("blurred");
+    overlay.style.display = "none";
+  }
+}
 
-      if (!res.ok) {
-        const errText = await res.text();
-        throw new Error("Gemini error: " + errText);
-      }
+applyBlurState();
+</script>
 
-      const data = await res.json();
-      const text =
-        data?.candidates?.[0]?.content?.parts?.map((p) => p.text).join("") ||
-        "No response from Gemini.";
-      return text.trim();
-    }
-
-    const btn = document.getElementById("aiBtn");
-    const statusEl = document.getElementById("status");
-    const outputEl = document.getElementById("output");
-    const inputEl = document.getElementById("resumeText");
-
-    btn.addEventListener("click", async () => {
-      const text = inputEl.value.trim();
-      if (!text) {
-        statusEl.textContent = "Please paste some resume text first.";
-        return;
-      }
-      btn.disabled = true;
-      statusEl.textContent = "Sending to Gemini…";
-      outputEl.style.display = "none";
-      outputEl.textContent = "";
-
-      try {
-        const humanized = await callGeminiHumanizer(text);
-        outputEl.style.display = "block";
-        outputEl.textContent = humanized;
-        statusEl.textContent = "Done. Review and tweak anything you want.";
-      } catch (err) {
-        console.error(err);
-        statusEl.textContent = "Something went wrong talking to Gemini. Check your API key.";
-      } finally {
-        btn.disabled = false;
-      }
-    });
-  </script>
 </body>
 </html>
