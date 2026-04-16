@@ -319,3 +319,382 @@ function scrollToAI(){
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Resupal – AI Resume Builder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <style>
+    :root {
+      --bg: #050816;
+      --card: #0b1024;
+      --accent: #4f46e5;
+      --accent-2: #22c55e;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --border: #1f2937;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 45px rgba(0,0,0,0.45);
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
+      color: var(--text);
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(14px);
+      background: rgba(3,7,18,0.85);
+      border-bottom: 1px solid rgba(31,41,55,0.7);
+      z-index: 20;
+    }
+
+    .nav {
+      max-width: 1120px;
+      margin: auto;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .nav-right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: white;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid rgba(148,163,184,0.4);
+      color: var(--muted);
+    }
+
+    .plan-badge {
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(55,65,81,0.9);
+      font-size: 11px;
+      color: #a5b4fc;
+      display: none;
+    }
+
+    /* HERO */
+    .hero {
+      max-width: 1120px;
+      margin: auto;
+      padding: 40px 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    @media(max-width:900px){
+      .hero { grid-template-columns: 1fr; }
+    }
+
+    .hero h1 {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    .hero-sub {
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    /* AI CARD */
+    .ai-card {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 18px;
+      border: 1px solid rgba(55,65,81,0.9);
+      position: relative;
+    }
+
+    .ai-output {
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(55,65,81,0.9);
+      border-radius: var(--radius-md);
+      max-height: 200px;
+      overflow: auto;
+      white-space: pre-wrap;
+      font-size: 13px;
+    }
+
+    .blurred {
+      filter: blur(6px);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .blur-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(4px);
+      border-radius: inherit;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+      padding: 20px;
+    }
+
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="nav">
+    <div class="logo">Resupal</div>
+
+    <div class="nav-right">
+      <span id="planBadge" class="plan-badge"></span>
+      <div id="gSignIn"></div>
+      <button id="signOut" class="btn-ghost" style="display:none;">Sign out</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div>
+    <h1>Human‑sounding resumes powered by AI</h1>
+    <p class="hero-sub">
+      Free users get AI previews. Standard & Pro unlock full text, unlimited rewrites, and stronger AI.
+    </p>
+
+    <button class="btn-primary btn" onclick="scrollToAI()">Try AI Free</button>
+  </div>
+
+  <div class="ai-card" id="aiCard">
+    <h3>AI Resume Rewriter</h3>
+
+    <input type="file" id="resumeFile" accept=".txt" style="margin-top:10px;" />
+    <button class="btn-primary btn" style="margin-top:10px;" onclick="runAI()">Rewrite with AI</button>
+
+    <div id="aiOutput" class="ai-output" style="display:none;"></div>
+    <div id="blurOverlay" class="blur-overlay" style="display:none;">
+      Upgrade to unlock full AI output.
+    </div>
+  </div>
+</section>
+
+<script>
+/* ------------------------------
+   CONFIG
+------------------------------ */
+const AI_API_KEY = "YOUR_AI_API_KEY_HERE";
+const GOOGLE_CLIENT_ID = "383092202504-lgad2a094dnqm3rt7pjk0csb59h4e8ag.apps.googleusercontent.com";
+const STRIPE_STANDARD = "https://buy.stripe.com/test_9B628q99vgCvg4Q005eEo01";
+const STRIPE_PRO = "https://buy.stripe.com/test_bJeeVc5Xj0Dxf0M6oteEo00";
+
+/* ------------------------------
+   PLAN LOGIC
+------------------------------ */
+function getPlan(){
+  return localStorage.getItem("resupal_plan") || "free";
+}
+
+function setPlan(p){
+  localStorage.setItem("resupal_plan", p);
+  updatePlanBadge();
+}
+
+function updatePlanBadge(){
+  const badge = document.getElementById("planBadge");
+  const plan = getPlan();
+
+  if(plan === "free"){
+    badge.style.display = "none";
+  } else {
+    badge.style.display = "inline-flex";
+    badge.textContent = plan === "standard" ? "Standard" : "Pro";
+  }
+}
+
+/* ------------------------------
+   GOOGLE SIGN-IN
+------------------------------ */
+window.onload = () => {
+  google.accounts.id.initialize({
+    client_id: GOOGLE_CLIENT_ID,
+    callback: handleGoogle
+  });
+
+  google.accounts.id.renderButton(
+    document.getElementById("gSignIn"),
+    { theme: "outline", size: "medium" }
+  );
+
+  updatePlanBadge();
+  restoreAuth();
+};
+
+function handleGoogle(res){
+  localStorage.setItem("resupal_google", "1");
+  document.getElementById("signOut").style.display = "inline-flex";
+}
+
+function restoreAuth(){
+  if(localStorage.getItem("resupal_google")){
+    document.getElementById("signOut").style.display = "inline-flex";
+  }
+}
+
+document.getElementById("signOut").onclick = () => {
+  localStorage.removeItem("resupal_google");
+  document.getElementById("signOut").style.display = "none";
+};
+
+/* ------------------------------
+   AI LOGIC
+------------------------------ */
+async function runAI(){
+  const file = document.getElementById("resumeFile").files[0];
+  if(!file) return alert("Upload a .txt file first");
+
+  const text = await file.text();
+  const output = document.getElementById("aiOutput");
+  const overlay = document.getElementById("blurOverlay");
+
+  output.style.display = "block";
+  output.textContent = "Processing with AI...";
+
+  const improved = await callAI(text);
+  output.textContent = improved;
+
+  const plan = getPlan();
+  if(plan === "free"){
+    output.classList.add("blurred");
+    overlay.style.display = "flex";
+  } else {
+    output.classList.remove("blurred");
+    overlay.style.display = "none";
+  }
+}
+
+async function callAI(text){
+  const body = {
+    contents: [{ parts: [{ text: `
+Rewrite this resume text to be clearer, more human, and more impactful.
+Keep facts real. Improve structure. Add light metrics if reasonable.
+
+${text}
+` }]}]
+  };
+
+  const res = await fetch(
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + AI_API_KEY,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    }
+  );
+
+  const data = await res.json();
+  return data?.candidates?.[0]?.content?.parts?.map(p => p.text).join("") || "AI error.";
+}
+
+/* ------------------------------
+   HELPERS
+------------------------------ */
+function scrollToAI(){
+  document.getElementById("aiCard").scrollIntoView({ behavior:"smooth" });
+}
+</script>
+
+</body>
+</html>
+<!-- FOOTER -->
+<footer style="
+  border-top:1px solid rgba(31,41,55,0.7);
+  padding:20px;
+  text-align:center;
+  color:#9ca3af;
+  font-size:13px;
+">
+  © <span id="year"></span> Resupal — Smart AI Resume Builder
+</footer>
+
+<script>
+/* ------------------------------
+   YEAR
+------------------------------ */
+document.getElementById("year").textContent = new Date().getFullYear();
+
+/* ------------------------------
+   UPGRADE BUTTONS
+------------------------------ */
+function upgradeStandard(){
+  localStorage.setItem("resupal_plan","standard");
+  updatePlanBadge();
+  window.location.href = STRIPE_STANDARD;
+}
+
+function upgradePro(){
+  localStorage.setItem("resupal_plan","pro");
+  updatePlanBadge();
+  window.location.href = STRIPE_PRO;
+}
+
+/* ------------------------------
+   UNBLUR WHEN PLAN CHANGES
+------------------------------ */
+function applyBlurState(){
+  const plan = getPlan();
+  const output = document.getElementById("aiOutput");
+  const overlay = document.getElementById("blurOverlay");
+
+  if(!output) return;
+
+  if(plan === "free"){
+    output.classList.add("blurred");
+    overlay.style.display = "flex";
+  } else {
+    output.classList.remove("blurred");
+    overlay.style.display = "none";
+  }
+}
+
+applyBlurState();
+</script>
+
+</body>
+</html>
+
+
