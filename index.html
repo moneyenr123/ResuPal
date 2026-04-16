@@ -424,7 +424,7 @@ Opportunities: - Add more metrics - Tighten long paragraphs - Align keywords wit
 /* CONFIG - DO NOT PASTE SECRET KEYS PUBLICLY
    Replace the placeholder below with your Groq API key before deploying.
    Keep keys secret and never commit them to public repos. */
-const AI_API_KEY = "YOUR_GROQ_API_KEY";
+const AI_API_KEY = "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";
 
 /* Optional: public Google client id (used only for rendering sign-in button) */
 const GOOGLE_CLIENT_ID = "383092202504-lgad2a094dnqm3rt7pjk0csb59h4e8ag.apps.googleusercontent.com";
@@ -473,7 +473,7 @@ document.getElementById("signOut").onclick = () => {
 
 /* GROQ / OpenAI-compatible API caller (robust parsing) */
 async function callAI(promptText) {
-  if (!AI_API_KEY || AI_API_KEY === "YOUR_GROQ_API_KEY") {
+  if (!AI_API_KEY || AI_API_KEY === "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") {
     throw new Error("Missing Groq API key. Set AI_API_KEY before calling the API.");
   }
 
