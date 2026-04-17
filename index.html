@@ -473,28 +473,31 @@ document.getElementById("signOut").onclick = () => {
 
 /* GROQ / OpenAI-compatible API caller (robust parsing) */
 async function callAI(promptText) {
-  if (!AI_API_KEY || AI_API_KEY === "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") {
-    throw new Error("Missing Groq API key. Set AI_API_KEY before calling the API.");
-  }
-
   const payload = {
     model: "llama3-8b-8192",
     messages: [{ role: "user", content: promptText }]
   };
 
-  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+  const res = await fetch("/.netlify/functions/groq-proxy", {
     method: "POST",
-    headers: {
-      "Authorization": "Bearer " + AI_API_KEY,
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
   });
 
   if (!res.ok) {
-    const txt = await res.text().catch(() => "");
-    throw new Error("AI API error: " + res.status + " " + res.statusText + " " + txt);
+    const txt = await res.text();
+    throw new Error("Proxy error: " + txt);
   }
+
+  const data = await res.json();
+
+  return (
+    data?.choices?.[0]?.message?.content ||
+    data?.choices?.[0]?.text ||
+    JSON.stringify(data)
+  );
+}
+
 
   const data = await res.json();
 
