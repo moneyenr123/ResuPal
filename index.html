@@ -6,161 +6,835 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" type="image/png" href="favicon.png" />
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+
   <style>
-:root {
-  --bg: #020617;
-  --bg-soft: #020617;
-  --bg-elevated: rgba(15,23,42,0.9);
-  --glass: rgba(15,23,42,0.85);
-  --glass-soft: rgba(15,23,42,0.7);
-  --glass-border: rgba(148,163,184,0.35);
-  --accent: #6366f1;
-  --accent-soft: rgba(99,102,241,0.2);
-  --accent-2: #22c55e;
-  --accent-2-soft: rgba(34,197,94,0.2);
-  --text: #f9fafb;
-  --muted: #9ca3af;
-  --danger: #f97373;
-  --radius-lg: 22px;
-  --radius-md: 14px;
-  --radius-pill: 999px;
-  --shadow-lg: 0 30px 80px rgba(0,0,0,0.7);
-  --shadow-md: 0 18px 45px rgba(0,0,0,0.55);
-  --glow-accent: 0 0 40px rgba(99,102,241,0.45);
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-  background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
-  color: var(--text);
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-a { color: inherit; text-decoration: none; }
+    :root {
+      --bg: #020617;
+      --bg-soft: #020617;
+      --bg-elevated: rgba(15, 23, 42, 0.9);
+      --glass: rgba(15, 23, 42, 0.85);
+      --glass-soft: rgba(15, 23, 42, 0.7);
+      --glass-border: rgba(148, 163, 184, 0.35);
+      --accent: #6366f1;
+      --accent-soft: rgba(99, 102, 241, 0.2);
+      --accent-2: #22c55e;
+      --accent-2-soft: rgba(34, 197, 94, 0.2);
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --danger: #f97373;
+      --radius-lg: 22px;
+      --radius-md: 14px;
+      --radius-pill: 999px;
+      --shadow-lg: 0 30px 80px rgba(0, 0, 0, 0.7);
+      --shadow-md: 0 18px 45px rgba(0, 0, 0, 0.55);
+      --glow-accent: 0 0 40px rgba(99, 102, 241, 0.45);
+    }
 
-/* NAVBAR */
-nav {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  padding: 16px 28px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  backdrop-filter: blur(18px);
-  background: linear-gradient( to bottom, rgba(2,6,23,0.9), rgba(2,6,23,0.7), transparent );
-  border-bottom: 1px solid rgba(15,23,42,0.9);
-}
-.nav-left { display: flex; align-items: center; gap: 10px; }
-.logo-mark { width: 28px; height: 28px; border-radius: 10px; background: radial-gradient(circle at 20% 0%, #6366f1, #22c55e); box-shadow: var(--glow-accent); }
-.logo-text { font-weight: 700; letter-spacing: -0.03em; font-size: 20px; }
-.logo-sub { font-size: 11px; color: var(--muted); }
-.nav-right { display: flex; align-items: center; gap: 10px; }
-.plan-badge { padding: 6px 12px; border-radius: var(--radius-pill); background: rgba(15,23,42,0.9); border: 1px solid rgba(148,163,184,0.6); font-size: 12px; color: #a5b4fc; display: none; }
-.btn-ghost { padding: 7px 14px; border-radius: var(--radius-pill); border: 1px solid rgba(148,163,184,0.6); background: rgba(15,23,42,0.7); color: var(--muted); font-size: 12px; cursor: pointer; transition: 0.18s; }
-.btn-ghost:hover { background: rgba(15,23,42,0.95); color: var(--text); }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-/* LAYOUT WRAPPER */
-.page { max-width: 1200px; margin: 0 auto; padding: 32px 20px 80px; }
-@media (max-width: 900px) { .page { padding: 24px 16px 60px; } }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
 
-/* HERO */
-.hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 40px; align-items: center; margin-bottom: 60px; }
-@media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); text-align: center; } }
-.hero-eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--accent-2); margin-bottom: 10px; }
-.hero-title { font-size: 44px; line-height: 1.05; margin-bottom: 14px; background: linear-gradient(135deg, #e5e7eb, #a5b4fc, #6366f1); -webkit-background-clip: text; color: transparent; }
-@media (max-width: 600px) { .hero-title { font-size: 34px; } }
-.hero-sub { font-size: 15px; color: var(--muted); max-width: 480px; margin-bottom: 20px; }
-@media (max-width: 900px) { .hero-sub { margin-left: auto; margin-right: auto; } }
-.hero-cta-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
-@media (max-width: 900px) { .hero-cta-row { justify-content: center; } }
-.btn-primary { padding: 12px 22px; border-radius: var(--radius-pill); border: none; background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; font-weight: 600; font-size: 14px; cursor: pointer; box-shadow: var(--glow-accent); transition: 0.18s; }
-.btn-primary:hover { transform: translateY(-1px); filter: brightness(1.08); }
-.hero-note { font-size: 12px; color: var(--muted); }
-.hero-note strong { color: #a5b4fc; font-weight: 500; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-/* HERO RIGHT – AI CARD + CAROUSEL */
-.hero-right { display: flex; flex-direction: column; gap: 16px; }
-.ai-card { background: var(--glass); border-radius: var(--radius-lg); border: 1px solid var(--glass-border); padding: 16px; box-shadow: var(--shadow-lg); backdrop-filter: blur(18px); position: relative; overflow: hidden; animation: float 7s ease-in-out infinite; }
-@keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
-.ai-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.ai-card-title { font-size: 14px; font-weight: 600; }
-.ai-card-tag { font-size: 11px; padding: 4px 10px; border-radius: var(--radius-pill); background: var(--accent-soft); color: #c7d2fe; border: 1px solid rgba(129,140,248,0.7); }
-.ai-card-body { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
-.ai-card-input { width: 100%; border-radius: var(--radius-md); border: 1px solid rgba(51,65,85,0.9); background: #020617; color: var(--text); font-size: 12px; padding: 8px 9px; margin-bottom: 8px; }
-.ai-card-btn { padding: 8px 14px; border-radius: var(--radius-pill); border: none; background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; font-size: 12px; font-weight: 600; cursor: pointer; }
-.ai-card-output { margin-top: 8px; padding: 8px; border-radius: var(--radius-md); background: rgba(15,23,42,0.9); border: 1px solid rgba(51,65,85,0.9); font-size: 12px; max-height: 140px; overflow: auto; white-space: pre-wrap; display: none; }
-.ai-card-status { margin-top: 4px; font-size: 11px; color: var(--muted); }
+    button {
+      font-family: inherit;
+    }
 
-/* CAROUSEL */
-.carousel { margin-top: 4px; background: var(--glass-soft); border-radius: var(--radius-lg); border: 1px solid var(--glass-border); padding: 10px; box-shadow: var(--shadow-md); backdrop-filter: blur(18px); }
-.carousel-inner { position: relative; overflow: hidden; border-radius: 16px; background: radial-gradient(circle at top, #1f2937, #020617); height: 220px; display: flex; align-items: center; justify-content: center; }
-.carousel-placeholder { width: 90%; height: 70%; border-radius: 14px; border: 1px dashed rgba(148,163,184,0.6); display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 13px; text-align: center; padding: 10px; }
-.carousel-dots { display: flex; justify-content: center; gap: 6px; margin-top: 8px; }
-.carousel-dot { width: 6px; height: 6px; border-radius: 999px; background: rgba(148,163,184,0.4); }
-.carousel-dot.active { width: 16px; background: #6366f1; }
+    /* NAVBAR */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 16px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(
+        to bottom,
+        rgba(2, 6, 23, 0.9),
+        rgba(2, 6, 23, 0.7),
+        transparent
+      );
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+    }
 
-/* SECTION WRAPPER */
-.section { margin-top: 60px; }
-.section-header { margin-bottom: 18px; }
-.section-eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--accent-2); margin-bottom: 6px; }
-.section-title { font-size: 24px; margin-bottom: 4px; }
-.section-sub { font-size: 14px; color: var(--muted); max-width: 520px; }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-/* ATS SCORE SECTION */
-.ats-grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 20px; }
-@media (max-width: 900px) { .ats-grid { grid-template-columns: minmax(0, 1fr); } }
-.card { background: var(--glass); border-radius: var(--radius-lg); border: 1px solid var(--glass-border); padding: 16px; box-shadow: var(--shadow-md); backdrop-filter: blur(18px); }
-.ats-score-main { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
-.ats-score-circle { width: 70px; height: 70px; border-radius: 999px; background: conic-gradient(from 220deg, #22c55e, #6366f1); display: flex; align-items: center; justify-content: center; position: relative; }
-.ats-score-circle-inner { width: 54px; height: 54px; border-radius: 999px; background: #020617; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; }
-.ats-score-labels { font-size: 13px; color: var(--muted); }
-.ats-score-labels strong { color: var(--text); font-size: 14px; }
-.ats-bars { margin-top: 10px; display: grid; gap: 8px; }
-.ats-bar-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
-.ats-bar-label { width: 110px; }
-.ats-bar-track { flex: 1; height: 6px; border-radius: 999px; background: rgba(15,23,42,0.9); overflow: hidden; }
-.ats-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #22c55e, #6366f1); width: 60%; }
-.ats-score-btn-row { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
-.btn-small { padding: 7px 12px; border-radius: var(--radius-pill); border: 1px solid rgba(148,163,184,0.6); background: rgba(15,23,42,0.9); color: var(--muted); font-size: 11px; cursor: pointer; }
-.btn-small-primary { border: none; background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; font-weight: 600; }
-.ats-ai-output { margin-top: 10px; padding: 10px; border-radius: var(--radius-md); background: rgba(15,23,42,0.9); border: 1px solid rgba(51,65,85,0.9); font-size: 12px; max-height: 160px; overflow: auto; white-space: pre-wrap; display: none; }
+    .logo-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      background: radial-gradient(circle at 20% 0%, #6366f1, #22c55e);
+      box-shadow: var(--glow-accent);
+    }
 
-/* BULLET IMPROVER */
-.bullet-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
-@media (max-width: 900px) { .bullet-grid { grid-template-columns: minmax(0, 1fr); } }
-.bullet-textarea { width: 100%; min-height: 120px; border-radius: var(--radius-md); border: 1px solid rgba(51,65,85,0.9); background: #020617; color: var(--text); font-size: 13px; padding: 10px; resize: vertical; }
-.bullet-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
-.bullet-output { margin-top: 8px; padding: 10px; border-radius: var(--radius-md); background: rgba(15,23,42,0.9); border: 1px solid rgba(51,65,85,0.9); font-size: 13px; min-height: 80px; white-space: pre-wrap; }
+    .logo-text-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
 
-/* TEMPLATES */
-.templates-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-top: 10px; }
-.template-card { background: var(--glass); border-radius: var(--radius-md); border: 1px solid var(--glass-border); padding: 14px; box-shadow: var(--shadow-md); backdrop-filter: blur(18px); display: flex; flex-direction: column; gap: 8px; }
-.template-preview { height: 120px; border-radius: 10px; background: radial-gradient(circle at top, #1f2937, #020617); border: 1px dashed rgba(148,163,184,0.6); display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 12px; }
-.template-name { font-size: 14px; font-weight: 600; }
-.template-meta { font-size: 12px; color: var(--muted); }
-.template-tag { font-size: 11px; padding: 3px 8px; border-radius: var(--radius-pill); background: rgba(34,197,94,0.12); color: #bbf7d0; border: 1px solid rgba(34,197,94,0.5); display: inline-block; }
+    .logo-text {
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      font-size: 20px;
+    }
 
-/* PRICING */
-.pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-top: 10px; }
-.pricing-card { background: var(--glass); border-radius: var(--radius-lg); border: 1px solid var(--glass-border); padding: 18px; box-shadow: var(--shadow-md); backdrop-filter: blur(18px); display: flex; flex-direction: column; gap: 10px; }
-.pricing-name { font-size: 16px; font-weight: 600; }
-.pricing-price { font-size: 20px; font-weight: 700; }
-.pricing-desc { font-size: 13px; color: var(--muted); }
-.pricing-list { font-size: 13px; color: var(--muted); list-style: none; padding-left: 0; }
-.pricing-list li::before { content: "• "; color: #a5b4fc; }
-.pricing-cta { margin-top: 6px; padding: 9px 16px; border-radius: var(--radius-pill); border: none; background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; font-size: 13px; font-weight: 600; cursor: pointer; align-self: flex-start; }
-.pricing-cta.secondary { background: rgba(15,23,42,0.9); border: 1px solid rgba(148,163,184,0.6); color: var(--muted); }
+    .logo-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
 
-/* MAIN AI REWRITE SECTION */
-.rewrite-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 20px; }
-@media (max-width: 900px) { .rewrite-grid { grid-template-columns: minmax(0, 1fr); } }
-.rewrite-textarea { width: 100%; min-height: 200px; border-radius: var(--radius-md); border: 1px solid rgba(51,65,85,0.9); background: #020617; color: var(--text); font-size: 13px; padding: 10px; resize: vertical; }
-.rewrite-output { margin-top: 8px; padding: 10px; border-radius: var(--radius-md); background: rgba(15,23,42,0.9); border: 1px solid rgba(51,65,85,0.9); font-size: 13px; max-height: 260px; overflow: auto; white-space: pre-wrap; display: none; }
-.rewrite-status { margin-top: 6px; font-size: 12px; color: var(--muted); }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-/* FOOTER */
-footer { text-align: center; padding: 30px 0 10px; font-size: 12px; color: var(--muted); }
+    .plan-badge {
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      font-size: 12px;
+      color: #a5b4fc;
+    }
+
+    .btn-ghost {
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.7);
+      color: var(--muted);
+      font-size: 12px;
+      cursor: pointer;
+      transition: 0.18s;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text);
+    }
+
+    .btn-primary {
+      padding: 8px 18px;
+      border-radius: var(--radius-pill);
+      border: none;
+      background: linear-gradient(135deg, #6366f1, #22c55e);
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: var(--glow-accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 40px rgba(99, 102, 241, 0.6);
+      opacity: 0.96;
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-secondary {
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--muted);
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.18s;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text);
+    }
+
+    /* PAGE LAYOUT */
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+
+    @media (max-width: 900px) {
+      .page {
+        padding: 24px 16px 60px;
+      }
+    }
+
+    /* HERO */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 40px;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 960px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .hero-left-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .hero-left-title span.badge-pill {
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.12);
+      color: #bbf7d0;
+      font-size: 10px;
+      border: 1px solid rgba(34, 197, 94, 0.4);
+    }
+
+    .hero h1 {
+      font-size: 34px;
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 {
+        font-size: 28px;
+      }
+    }
+
+    .hero h1 span.gradient {
+      background: linear-gradient(135deg, #6366f1, #22c55e);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-sub {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 480px;
+      margin-bottom: 18px;
+    }
+
+    .hero-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .metric-pill {
+      padding: 8px 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 11px;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .metric-pill strong {
+      color: #e5e7eb;
+      font-weight: 600;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 18px;
+    }
+
+    .hero-cta-note {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .hero-right-card {
+      border-radius: var(--radius-lg);
+      background: radial-gradient(circle at top left, rgba(99, 102, 241, 0.18), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.18), transparent 55%),
+        rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      box-shadow: var(--shadow-lg);
+      padding: 18px 18px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-right-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .hero-right-title {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .hero-right-badge {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: #a5b4fc;
+    }
+
+    .hero-right-main {
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 12px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 960px) {
+      .hero-right-main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .hero-mini-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .hero-mini-box {
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 10px;
+      font-size: 11px;
+      color: #e5e7eb;
+      min-height: 80px;
+      white-space: pre-wrap;
+    }
+
+    .hero-mini-score {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .score-circle {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 0%, #22c55e, #16a34a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: white;
+      box-shadow: 0 0 30px rgba(34, 197, 94, 0.6);
+    }
+
+    .score-text {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .hero-right-footer {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .hero-right-footer span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.8);
+      display: inline-block;
+      margin-right: 4px;
+    }
+
+    /* MAIN APP LAYOUT */
+    .app-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+      gap: 22px;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 1024px) {
+      .app-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .panel {
+      border-radius: var(--radius-lg);
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-md);
+      padding: 16px 16px 14px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .panel-title-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .panel-subtitle {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .panel-tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .tag-pill {
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .tag-pill strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    /* INPUT AREA */
+    .input-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+      padding-bottom: 4px;
+    }
+
+    .input-tab {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      color: var(--muted);
+      background: transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.16s;
+    }
+
+    .input-tab.active {
+      border-color: rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5e7eb;
+    }
+
+    .input-tab span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.7);
+    }
+
+    .input-tab.active span.dot {
+      background: #6366f1;
+    }
+
+    .input-group {
+      margin-bottom: 10px;
+    }
+
+    .input-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .input-label {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .input-label strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .input-hint {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 180px;
+      resize: vertical;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      padding: 10px 11px;
+      font-size: 12px;
+      outline: none;
+      line-height: 1.4;
+    }
+
+    textarea::placeholder {
+      color: #6b7280;
+    }
+
+    textarea:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.4);
+    }
+
+    .file-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .file-label {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .file-input {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .file-input input[type="file"] {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .input-actions-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .input-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .char-count {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* JOB DESCRIPTION */
+    .job-box {
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px dashed rgba(148, 163, 184, 0.6);
+      padding: 10px;
+      margin-top: 8px;
+    }
+
+    .job-box textarea {
+      min-height: 120px;
+    }
+
+    /* OUTPUT PANEL */
+    .output-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .output-tab {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      cursor: pointer;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--muted);
+      background: rgba(15, 23, 42, 0.9);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.16s;
+    }
+
+    .output-tab.active {
+      border-color: #6366f1;
+      color: #e5e7eb;
+      box-shadow: 0 0 18px rgba(99, 102, 241, 0.4);
+    }
+
+    .output-tab span.badge {
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    .output-body {
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      padding: 10px;
+      min-height: 220px;
+      font-size: 12px;
+      color: #e5e7eb;
+      white-space: pre-wrap;
+      line-height: 1.45;
+      position: relative;
+    }
+
+    .output-placeholder {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .output-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .score-chip {
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+    }
+
+    .score-chip span.score {
+      font-weight: 600;
+      color: #bbf7d0;
+    }
+
+    .score-chip span.label {
+      color: var(--muted);
+    }
+
+    .score-bar-wrap {
+      margin-top: 6px;
+      margin-bottom: 8px;
+    }
+
+    .score-bar-bg {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(31, 41, 55, 0.9);
+      overflow: hidden;
+    }
+
+    .score-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #ef4444, #f97316, #22c55e);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    .score-bar-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .output-footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .output-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .pill-link {
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.9);
+      font-size: 10px;
+      cursor: pointer;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .pill-link:hover {
+      color: #e5e7eb;
+      border-color: #6366f1;
+    }
+
+    .status-pill {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+
+    .status-pill span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.8);
+    }
+
+    .status-pill.loading span.dot {
+      background: #facc15;
+      box-shadow: 0 0 10px rgba(250, 204, 21, 0.8);
+    }
+
+    .status-pill.error span.dot {
+      background: #ef4444;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 18px;
+      right: 18px;
+      z-index: 60;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      color: #e5e7eb;
+      font-size: 11px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .toast span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    /* FOOTER */
+    footer {
+      margin-top: 32px;
+      font-size: 10px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-top: 1px solid rgba(15, 23, 42, 0.9);
+      padding-top: 12px;
+    }
+
+    footer a {
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      text-underline-offset: 3px;
+    }
   </style>
 </head>
 <body>
@@ -168,478 +842,771 @@ footer { text-align: center; padding: 30px 0 10px; font-size: 12px; color: var(-
   <nav>
     <div class="nav-left">
       <div class="logo-mark"></div>
-      <div>
+      <div class="logo-text-wrap">
         <div class="logo-text">ResuPal Resume AI</div>
-        <div class="logo-sub">Human-sounding resumes, ATS smart.</div>
+        <div class="logo-sub">Smart AI resume builder · Groq‑powered</div>
       </div>
     </div>
-
     <div class="nav-right">
-      <span id="planBadge" class="plan-badge"></span>
-      <div id="gSignIn"></div>
-      <button id="signOut" class="btn-ghost" style="display:none;">Sign out</button>
+      <div class="plan-badge" id="planBadge">
+        Free plan · Upgrade coming soon
+      </div>
+      <button class="btn-ghost" id="loginButton">
+        Sign in with Google
+      </button>
     </div>
   </nav>
 
   <main class="page">
     <!-- HERO -->
     <section class="hero">
-      <div>
-        <div class="hero-eyebrow">AI resume builder</div>
-        <h1 class="hero-title">Sound human. Score high. Get noticed.</h1>
+      <div class="hero-left">
+        <div class="hero-left-title">
+          <span class="badge-pill">New</span>
+          <span>Groq‑powered resume intelligence · ResuMax‑style features</span>
+        </div>
+        <h1>
+          Turn your resume into a
+          <span class="gradient">job‑winning story</span>
+          in seconds.
+        </h1>
         <p class="hero-sub">
-          ResuPal Resume AI rewrites your resume to sound natural, clear, and confident—while staying ATS-friendly. During testing, <strong>free users get full AI power.</strong>
+          Paste your resume, drop in a job description, and let ResuPal score, rewrite, and humanize
+          your content — inspired by the best of ResuMax, but built for speed.
         </p>
 
         <div class="hero-cta-row">
-          <button class="btn-primary" onclick="scrollToRewrite()">Try AI rewrite free</button>
-          <span class="hero-note"><strong>Testing mode:</strong> Free = unlimited AI.</span>
+          <button class="btn-primary" id="heroStartButton">
+            Start with your resume
+          </button>
+          <button class="btn-secondary" id="heroDemoButton">
+            Try a demo resume
+          </button>
+          <div class="hero-cta-note">
+            No account required · Your content stays in this browser
+          </div>
+        </div>
+
+        <div class="hero-metrics">
+          <div class="metric-pill">
+            <strong>ATS‑aware</strong>
+            <span>Score & keyword match</span>
+          </div>
+          <div class="metric-pill">
+            <strong>Bullet upgrades</strong>
+            <span>Impact‑driven rewrites</span>
+          </div>
+          <div class="metric-pill">
+            <strong>Humanizer</strong>
+            <span>Less robotic, more you</span>
+          </div>
         </div>
       </div>
 
       <div class="hero-right">
-        <!-- Mini AI card -->
-        <div class="ai-card">
-          <div class="ai-card-header">
-            <div class="ai-card-title">Quick bullet upgrade</div>
-            <div class="ai-card-tag">AI preview</div>
+        <div class="hero-right-card">
+          <div class="hero-right-header">
+            <div class="hero-right-title">Live preview</div>
+            <div class="hero-right-badge">Groq · llama3‑8b‑8192</div>
           </div>
-
-          <div class="ai-card-body">Paste a single resume bullet and see how ResuPal makes it stronger.</div>
-
-          <input id="heroBulletInput" class="ai-card-input" placeholder="E.g. Responsible for managing projects..." />
-          <button class="ai-card-btn" onclick="runHeroBullet()">Improve bullet</button>
-          <div id="heroBulletOutput" class="ai-card-output"></div>
-          <div id="heroBulletStatus" class="ai-card-status">Testing mode: uses full AI.</div>
-        </div>
-
-        <!-- Carousel (single wide image style) -->
-        <div class="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-placeholder">Screenshot carousel placeholder — add your own image of ResuPal here (1200×700 recommended).</div>
+          <div class="hero-right-main">
+            <div>
+              <div class="hero-mini-label">Resume snippet</div>
+              <div class="hero-mini-box" id="heroResumeSnippet">
+Experienced Marketing Specialist with 5+ years driving growth across paid and organic channels. Led campaigns that increased qualified leads by 38% YoY and improved conversion rates by 22%.</div>
+            </div>
+            <div>
+              <div class="hero-mini-label">ATS score preview</div>
+              <div class="hero-mini-box">
+                <div class="hero-mini-score">
+                  <div class="score-circle" id="heroScoreCircle">82</div>
+                  <div class="score-text">
+                    Strong alignment with job description. Great use of measurable impact. Add 2–3 more role‑specific keywords to reach 90+.
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-
-          <div class="carousel-dots">
-            <div class="carousel-dot active"></div>
-            <div class="carousel-dot"></div>
-            <div class="carousel-dot"></div>
+          <div class="hero-right-footer">
+            <div>
+              <span class="dot"></span>
+              Real AI — no fake demo text
+            </div>
+            <div>Optimized for quick iterations, not endless forms</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ATS SCORE SECTION -->
-    <section class="section">
-      <div class="section-header">
-        <div class="section-eyebrow">ATS score & breakdown</div>
-        <h2 class="section-title">See how your resume scores before you apply.</h2>
-        <p class="section-sub">ResuPal Resume AI analyzes your resume for clarity, keywords, structure, and impact—then gives you a score and specific suggestions to improve.</p>
+    <!-- MAIN APP -->
+    <section class="app-grid">
+      <!-- LEFT: INPUT -->
+      <div class="panel" id="inputPanel">
+        <div class="panel-header">
+          <div class="panel-title-wrap">
+            <div class="panel-title">Your resume</div>
+            <div class="panel-subtitle">
+              Paste your resume text or upload a file. We’ll keep everything in this session only.
+            </div>
+          </div>
+          <button class="btn-secondary" id="clearResumeButton">
+            Clear
+          </button>
+        </div>
+
+        <div class="panel-tag-row">
+          <div class="tag-pill"><strong>Tip:</strong> Paste from PDF/Word for best results</div>
+          <div class="tag-pill"><strong>Privacy:</strong> No server‑side storage</div>
+        </div>
+
+        <div class="input-tabs">
+          <button class="input-tab active" data-input-mode="paste">
+            <span class="dot"></span>
+            Paste resume
+          </button>
+          <button class="input-tab" data-input-mode="upload">
+            <span class="dot"></span>
+            Upload PDF / DOCX
+          </button>
+        </div>
+
+        <div class="input-group" id="pasteInputGroup">
+          <div class="input-label-row">
+            <div class="input-label">
+              <strong>Resume text</strong> · paste your full resume here
+            </div>
+            <div class="input-hint">
+              We’ll use this for ATS scoring, bullet improvements, and humanizing.
+            </div>
+          </div>
+          <textarea
+            id="resumeText"
+            placeholder="Paste your resume here. Include your summary, experience, skills, and education.
+
+Example:
+Senior Software Engineer with 7+ years of experience building scalable web applications..."
+          ></textarea>
+          <div class="input-meta-row">
+            <div class="char-count" id="resumeCharCount">0 characters</div>
+            <div>English only for now · More languages coming soon</div>
+          </div>
+        </div>
+
+        <div class="input-group" id="uploadInputGroup" style="display:none;">
+          <div class="file-row">
+            <div class="file-label"><strong>Upload resume file</strong></div>
+            <div class="file-input">
+              <input type="file" id="resumeFileInput" accept=".pdf,.doc,.docx,.txt" />
+            </div>
+          </div>
+          <div class="input-hint">
+            We’ll try to extract text in your browser. If parsing fails, paste the text manually.
+          </div>
+        </div>
+
+        <div class="input-group">
+          <div class="input-label-row">
+            <div class="input-label">
+              <strong>Job description</strong> (optional but recommended)
+            </div>
+            <div class="input-hint">
+              Used for ATS score and tailored bullet suggestions.
+            </div>
+          </div>
+          <div class="job-box">
+            <textarea
+              id="jobDescription"
+              placeholder="Paste the job description here.
+
+Example:
+We’re looking for a Senior Product Manager to lead cross‑functional teams..."
+            ></textarea>
+            <div class="input-meta-row">
+              <div class="char-count" id="jobCharCount">0 characters</div>
+              <div>Leave blank for general improvements</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-actions-row">
+          <button class="btn-primary" id="runAllButton">
+            Run full analysis
+          </button>
+          <button class="btn-secondary" id="atsOnlyButton">
+            ATS score only
+          </button>
+          <button class="btn-secondary" id="bulletsOnlyButton">
+            Improve bullets
+          </button>
+          <button class="btn-secondary" id="humanizeOnlyButton">
+            Humanize tone
+          </button>
+        </div>
+
+        <div class="input-meta-row">
+          <div>
+            <span id="apiStatusLabel">Groq proxy: ready</span>
+          </div>
+          <div>
+            Approx. 5–10 seconds per full run · llama3‑8b‑8192
+          </div>
+        </div>
       </div>
 
-      <div class="ats-grid">
-        <!-- Score card -->
-        <div class="card">
-          <div class="ats-score-main">
-            <div class="ats-score-circle">
-              <div id="atsScoreValue" class="ats-score-circle-inner">–</div>
+      <!-- RIGHT: OUTPUT -->
+      <div class="panel" id="outputPanel">
+        <div class="panel-header">
+          <div class="panel-title-wrap">
+            <div class="panel-title">AI results</div>
+            <div class="panel-subtitle">
+              Switch between ATS score, bullet improvements, humanized version, and job match insights.
             </div>
+          </div>
+          <button class="btn-secondary" id="copyActiveButton">
+            Copy active view
+          </button>
+        </div>
 
-            <div class="ats-score-labels">
-              <strong>ATS score</strong><br />
-              <span id="atsScoreLabel">Upload or paste your resume to generate a score.</span>
+        <div class="panel-tag-row">
+          <div class="tag-pill"><strong>Mode:</strong> Hybrid — one call, multiple views</div>
+          <div class="tag-pill"><strong>Model:</strong> llama3‑8b‑8192 via Groq</div>
+        </div>
+
+        <div class="output-tabs">
+          <button class="output-tab active" data-output-mode="ats">
+            ATS score
+            <span class="badge">Score + breakdown</span>
+          </button>
+          <button class="output-tab" data-output-mode="bullets">
+            Bullet improvements
+            <span class="badge">Role‑aligned rewrites</span>
+          </button>
+          <button class="output-tab" data-output-mode="humanize">
+            Humanizer
+            <span class="badge">Less robotic</span>
+          </button>
+          <button class="output-tab" data-output-mode="match">
+            Job match insights
+            <span class="badge">Gaps & keywords</span>
+          </button>
+        </div>
+
+        <div class="output-body" id="outputBody">
+          <div class="output-header-row">
+            <div id="outputHeaderLabel">ATS score & breakdown</div>
+            <div class="score-chip" id="scoreChip" style="display:none;">
+              <span class="score" id="scoreChipValue">–</span>
+              <span class="label">/ 100</span>
             </div>
           </div>
 
-          <div class="ats-bars">
-            <div class="ats-bar-row">
-              <div class="ats-bar-label">Clarity</div>
-              <div class="ats-bar-track"><div id="atsBarClarity" class="ats-bar-fill" style="width:60%;"></div></div>
-            </div>
-
-            <div class="ats-bar-row">
-              <div class="ats-bar-label">Keywords</div>
-              <div class="ats-bar-track"><div id="atsBarKeywords" class="ats-bar-fill" style="width:60%;"></div></div>
-            </div>
-
-            <div class="ats-bar-row">
-              <div class="ats-bar-label">Structure</div>
-              <div class="ats-bar-track"><div id="atsBarStructure" class="ats-bar-fill" style="width:60%;"></div></div>
-            </div>
-
-            <div class="ats-bar-row">
-              <div class="ats-bar-label">Impact</div>
-              <div class="ats-bar-track"><div id="atsBarImpact" class="ats-bar-fill" style="width:60%;"></div></div>
+          <div id="atsScoreSection" style="display:block;">
+            <div class="score-bar-wrap">
+              <div class="score-bar-bg">
+                <div class="score-bar-fill" id="scoreBarFill"></div>
+              </div>
+              <div class="score-bar-labels">
+                <span>Low match</span>
+                <span>Medium</span>
+                <span>High match</span>
+              </div>
             </div>
           </div>
 
-          <div class="ats-score-btn-row">
-            <button class="btn-small-primary" onclick="runAtsScore()">Analyze resume with AI</button>
-            <button class="btn-small" onclick="scrollToRewrite()">Paste resume below</button>
+          <div id="outputContent">
+            <div class="output-placeholder">
+              Run a full analysis to see:
+              <br><br>
+              • ATS score and why you got it<br>
+              • Bullet‑by‑bullet improvements with impact and metrics<br>
+              • A more human, less robotic version of your resume<br>
+              • Job match insights and missing keywords
+            </div>
           </div>
 
-          <div id="atsScoreOutput" class="ats-ai-output"></div>
-        </div>
-
-        <!-- Strengths / weaknesses -->
-        <div class="card">
-          <div class="bullet-label">Strengths & opportunities</div>
-          <div id="atsStrengths" class="bullet-output">
-Strong examples: - Clear job titles - Quantified achievements - Action verbs
-Opportunities: - Add more metrics - Tighten long paragraphs - Align keywords with the job posting
+          <div class="output-footer-row">
+            <div class="output-actions">
+              <button class="pill-link" id="insertDemoOutputButton">
+                Use sample output
+              </button>
+              <button class="pill-link" id="downloadTextButton">
+                Download as .txt
+              </button>
+            </div>
+            <div>
+              <span class="status-pill" id="statusPill">
+                <span class="dot"></span>
+                Idle · waiting for your resume
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- BULLET IMPROVER SECTION -->
-    <section class="section">
-      <div class="section-header">
-        <div class="section-eyebrow">Bullet enhancer</div>
-        <h2 class="section-title">Turn vague bullets into sharp, metric-driven wins.</h2>
-        <p class="section-sub">Paste a weak bullet on the left. ResuPal rewrites it on the right to be clearer, more specific, and more impressive—without making things up.</p>
+    <footer>
+      <div>© <span id="yearSpan"></span> ResuPal Resume AI · Built with Groq</div>
+      <div>
+        <a href="#" id="privacyLink">Privacy</a> ·
+        <a href="#" id="termsLink">Terms</a> ·
+        <span>Not affiliated with ResuMax</span>
       </div>
-
-      <div class="bullet-grid">
-        <div class="card">
-          <div class="bullet-label">Your current bullet</div>
-          <textarea id="bulletInput" class="bullet-textarea" placeholder="E.g. Helped with social media for the company."></textarea>
-          <button class="btn-primary" style="margin-top:8px;" onclick="runBulletImprover()">Improve bullet with AI</button>
-        </div>
-
-        <div class="card">
-          <div class="bullet-label">Improved bullet</div>
-          <div id="bulletOutput" class="bullet-output">You’ll see your improved bullet here. It will stay true to what you did, but sound clearer and more impactful.</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TEMPLATES SECTION -->
-    <section class="section">
-      <div class="section-header">
-        <div class="section-eyebrow">ATS-friendly templates</div>
-        <h2 class="section-title">Pick a layout that looks good and passes ATS.</h2>
-        <p class="section-sub">ResuPal Resume AI works with any template—but these layouts are designed to be clean, scannable, and recruiter-friendly.</p>
-      </div>
-
-      <div class="templates-grid">
-        <div class="template-card">
-          <div class="template-preview">Clean Professional Layout</div>
-          <div class="template-name">Clean Professional</div>
-          <div class="template-meta">Simple, ATS-safe, perfect for most roles.</div>
-          <span class="template-tag">ATS-friendly</span>
-        </div>
-
-        <div class="template-card">
-          <div class="template-preview">Modern Two-Column Layout</div>
-          <div class="template-name">Modern Split</div>
-          <div class="template-meta">Highlights skills and experience side-by-side.</div>
-          <span class="template-tag">ATS-friendly</span>
-        </div>
-
-        <div class="template-card">
-          <div class="template-preview">Impact-Focused Layout</div>
-          <div class="template-name">Impact Focus</div>
-          <div class="template-meta">Great for roles where achievements matter most.</div>
-          <span class="template-tag">ATS-friendly</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- PRICING SECTION -->
-    <section class="section">
-      <div class="section-header">
-        <div class="section-eyebrow">Pricing</div>
-        <h2 class="section-title">Start free. Upgrade only if it’s worth it.</h2>
-        <p class="section-sub">During testing, free users get full AI power. Standard and Pro plans are ready for when you’re ready to scale.</p>
-      </div>
-
-      <div class="pricing-grid">
-        <div class="pricing-card">
-          <div class="pricing-name">Free</div>
-          <div class="pricing-price">$0</div>
-          <div class="pricing-desc">Perfect for trying ResuPal Resume AI.</div>
-          <ul class="pricing-list">
-            <li>Full AI during testing</li>
-            <li>Unlimited rewrites (testing mode)</li>
-            <li>Basic ATS analysis</li>
-          </ul>
-          <button class="pricing-cta secondary" onclick="setPlan('free')">Stay on Free</button>
-        </div>
-
-        <div class="pricing-card">
-          <div class="pricing-name">Standard</div>
-          <div class="pricing-price">$6 / month</div>
-          <div class="pricing-desc">For job seekers who want stronger AI and more control.</div>
-          <ul class="pricing-list">
-            <li>Full AI output</li>
-            <li>Unlimited rewrites</li>
-            <li>Deeper ATS breakdown</li>
-          </ul>
-          <button class="pricing-cta" onclick="upgradeStandard()">Get Standard</button>
-        </div>
-
-        <div class="pricing-card">
-          <div class="pricing-name">Pro</div>
-          <div class="pricing-price">$10 / month</div>
-          <div class="pricing-desc">For power users and frequent job switchers.</div>
-          <ul class="pricing-list">
-            <li>Everything in Standard</li>
-            <li>Stronger AI rewriting</li>
-            <li>Priority processing</li>
-          </ul>
-          <button class="pricing-cta" onclick="upgradePro()">Upgrade to Pro</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- MAIN AI REWRITE SECTION -->
-    <section class="section" id="rewriteSection">
-      <div class="section-header">
-        <div class="section-eyebrow">Full resume rewrite</div>
-        <h2 class="section-title">Paste your resume. Get a clearer, more confident version.</h2>
-        <p class="section-sub">ResuPal Resume AI rewrites your resume to be easier to read, more human, and more impactful—without inventing experience you don’t have.</p>
-      </div>
-
-      <div class="rewrite-grid">
-        <div class="card">
-          <div class="bullet-label">Your current resume (paste text)</div>
-          <textarea id="resumeInput" class="rewrite-textarea" placeholder="Paste your resume text here..."></textarea>
-          <button class="btn-primary" style="margin-top:8px;" onclick="runRewrite()">Rewrite with AI</button>
-          <div id="rewriteStatus" class="rewrite-status">Testing mode: Free users get full AI.</div>
-        </div>
-
-        <div class="card">
-          <div class="bullet-label">Rewritten resume</div>
-          <div id="rewriteOutput" class="rewrite-output"></div>
-        </div>
-      </div>
-    </section>
+    </footer>
   </main>
 
-  <footer>
-    © <span id="year"></span> ResuPal Resume AI — Built for real people, not robots.
-  </footer>
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <span class="dot"></span>
+    <span id="toastMessage">Copied to clipboard</span>
+  </div>
 
   <script>
-/* CONFIG - DO NOT PASTE SECRET KEYS PUBLICLY
-   Replace the placeholder below with your Groq API key before deploying.
-   Keep keys secret and never commit them to public repos. */
-const AI_API_KEY = "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";
+    // ---------- BASIC STATE ----------
+    const resumeTextEl = document.getElementById("resumeText");
+    const jobDescriptionEl = document.getElementById("jobDescription");
+    const resumeCharCountEl = document.getElementById("resumeCharCount");
+    const jobCharCountEl = document.getElementById("jobCharCount");
+    const statusPillEl = document.getElementById("statusPill");
+    const apiStatusLabelEl = document.getElementById("apiStatusLabel");
+    const outputBodyEl = document.getElementById("outputBody");
+    const outputContentEl = document.getElementById("outputContent");
+    const outputHeaderLabelEl = document.getElementById("outputHeaderLabel");
+    const scoreChipEl = document.getElementById("scoreChip");
+    const scoreChipValueEl = document.getElementById("scoreChipValue");
+    const scoreBarFillEl = document.getElementById("scoreBarFill");
+    const toastEl = document.getElementById("toast");
+    const toastMessageEl = document.getElementById("toastMessage");
+    const yearSpanEl = document.getElementById("yearSpan");
 
-/* Optional: public Google client id (used only for rendering sign-in button) */
-const GOOGLE_CLIENT_ID = "383092202504-lgad2a094dnqm3rt7pjk0csb59h4e8ag.apps.googleusercontent.com";
+    const runAllButton = document.getElementById("runAllButton");
+    const atsOnlyButton = document.getElementById("atsOnlyButton");
+    const bulletsOnlyButton = document.getElementById("bulletsOnlyButton");
+    const humanizeOnlyButton = document.getElementById("humanizeOnlyButton");
+    const copyActiveButton = document.getElementById("copyActiveButton");
+    const insertDemoOutputButton = document.getElementById("insertDemoOutputButton");
+    const downloadTextButton = document.getElementById("downloadTextButton");
+    const clearResumeButton = document.getElementById("clearResumeButton");
+    const heroStartButton = document.getElementById("heroStartButton");
+    const heroDemoButton = document.getElementById("heroDemoButton");
 
-/* Stripe placeholders (unchanged) */
-const STRIPE_STANDARD = "https://buy.stripe.com/test_9B628q99vgCvg4Q005eEo01";
-const STRIPE_PRO = "https://buy.stripe.com/test_bJeeVc5Xj0Dxf0M6oteEo00";
+    const inputTabs = document.querySelectorAll(".input-tab");
+    const pasteInputGroup = document.getElementById("pasteInputGroup");
+    const uploadInputGroup = document.getElementById("uploadInputGroup");
+    const resumeFileInput = document.getElementById("resumeFileInput");
 
-/* PLAN LOGIC */
-function getPlan() { return localStorage.getItem("resupal_plan") || "free"; }
-function setPlan(plan) { localStorage.setItem("resupal_plan", plan); updatePlanBadge(); }
-function updatePlanBadge() {
-  const badge = document.getElementById("planBadge");
-  const plan = getPlan();
-  if (plan === "free") {
-    badge.style.display = "none";
-  } else {
-    badge.style.display = "inline-flex";
-    badge.textContent = plan === "standard" ? "Standard" : "Pro";
-  }
-}
+    const outputTabs = document.querySelectorAll(".output-tab");
 
-/* GOOGLE SIGN-IN (UI only) */
-window.onload = () => {
-  if (window.google && google.accounts && google.accounts.id) {
-    google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogle });
-    google.accounts.id.renderButton(document.getElementById("gSignIn"), { theme: "outline", size: "medium" });
-  }
-  restoreAuth();
-  updatePlanBadge();
-  document.getElementById("year").textContent = new Date().getFullYear();
-};
-function handleGoogle(response) {
-  localStorage.setItem("resupal_google", "1");
-  document.getElementById("signOut").style.display = "inline-flex";
-}
-function restoreAuth() {
-  if (localStorage.getItem("resupal_google")) {
-    document.getElementById("signOut").style.display = "inline-flex";
-  }
-}
-document.getElementById("signOut").onclick = () => {
-  localStorage.removeItem("resupal_google");
-  document.getElementById("signOut").style.display = "none";
-};
+    let activeOutputMode = "ats";
+    let lastAIResult = null; // store structured AI result
 
-/* GROQ / OpenAI-compatible API caller (robust parsing) */
-async function callAI(promptText) {
-  const payload = {
-    model: "llama3-8b-8192",
-    messages: [
-      { role: "user", content: promptText }
-    ]
-  };
+    yearSpanEl.textContent = new Date().getFullYear();
 
-  const res = await fetch("/.netlify/functions/groq-proxy", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  });
-
-  const text = await res.text();
-
-  let data;
-  try {
-    data = JSON.parse(text);
-  } catch {
-    return text;
-  }
-
-  return (
-    data?.choices?.[0]?.message?.content ||
-    data?.choices?.[0]?.text ||
-    JSON.stringify(data)
-  );
-}
-
-
-  const data = await res.json();
-
-  // Robust extraction for different response shapes
-  // 1) OpenAI-style: data.choices[0].message.content
-  // 2) OpenAI-style older: data.choices[0].text
-  // 3) Groq-style candidates: data.candidates[0].content.parts...
-  try {
-    if (data.choices && data.choices[0]) {
-      const ch = data.choices[0];
-      if (ch.message && (ch.message.content || ch.message)) {
-        return (typeof ch.message.content === "string") ? ch.message.content : (ch.message.content?.parts?.map(p => p.text || p).join("") || JSON.stringify(ch.message));
+    // ---------- UTILITIES ----------
+    function setStatus(mode, message) {
+      statusPillEl.classList.remove("loading", "error");
+      if (mode === "loading") {
+        statusPillEl.classList.add("loading");
+      } else if (mode === "error") {
+        statusPillEl.classList.add("error");
       }
-      if (ch.text) return ch.text;
+      statusPillEl.innerHTML = '<span class="dot"></span>' + message;
     }
 
-    if (data.candidates && data.candidates[0]) {
-      const cand = data.candidates[0];
-      if (cand.content && cand.content.parts) {
-        return cand.content.parts.map(p => (typeof p === "string" ? p : p.text || "")).join("");
+    function showToast(message) {
+      toastMessageEl.textContent = message;
+      toastEl.style.display = "inline-flex";
+      setTimeout(() => {
+        toastEl.style.display = "none";
+      }, 2200);
+    }
+
+    function updateCharCounts() {
+      resumeCharCountEl.textContent = (resumeTextEl.value || "").length + " characters";
+      jobCharCountEl.textContent = (jobDescriptionEl.value || "").length + " characters";
+    }
+
+    resumeTextEl.addEventListener("input", updateCharCounts);
+    jobDescriptionEl.addEventListener("input", updateCharCounts);
+    updateCharCounts();
+
+    // ---------- INPUT MODE SWITCH ----------
+    inputTabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        inputTabs.forEach((t) => t.classList.remove("active"));
+        tab.classList.add("active");
+        const mode = tab.getAttribute("data-input-mode");
+        if (mode === "paste") {
+          pasteInputGroup.style.display = "";
+          uploadInputGroup.style.display = "none";
+        } else {
+          pasteInputGroup.style.display = "none";
+          uploadInputGroup.style.display = "";
+        }
+      });
+    });
+
+    // Simple file text extraction (txt only; others show hint)
+    resumeFileInput.addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (file.type === "text/plain") {
+        const text = await file.text();
+        resumeTextEl.value = text;
+        updateCharCounts();
+        showToast("Text file loaded into resume box");
+      } else {
+        showToast("For now, please open your file and paste the text here.");
       }
-      if (cand.content && typeof cand.content === "string") return cand.content;
+    });
+
+    // ---------- OUTPUT TAB SWITCH ----------
+    outputTabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        outputTabs.forEach((t) => t.classList.remove("active"));
+        tab.classList.add("active");
+        activeOutputMode = tab.getAttribute("data-output-mode");
+        renderOutput();
+      });
+    });
+
+    // ---------- AI CALL ----------
+    async function callAI(mode) {
+      const resume = (resumeTextEl.value || "").trim();
+      const job = (jobDescriptionEl.value || "").trim();
+
+      if (!resume) {
+        showToast("Add your resume text first.");
+        return;
+      }
+
+      const payload = {
+        model: "llama3-8b-8192",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are ResuPal Resume AI, a professional resume optimizer. " +
+              "You analyze resumes and job descriptions, then return a single JSON object with four keys: " +
+              "ats, bullets, humanize, match. " +
+              "Each key should contain a structured text response. " +
+              "Keep responses concise but specific, and avoid markdown lists unless helpful."
+          },
+          {
+            role: "user",
+            content:
+              "MODE: " + mode + "\n\n" +
+              "RESUME:\n" + resume + "\n\n" +
+              "JOB DESCRIPTION (may be empty):\n" + job + "\n\n" +
+              "Return JSON ONLY, no extra commentary. Shape:\n" +
+              "{\n" +
+              '  "ats": {\n' +
+              '    "score": number,\n' +
+              '    "summary": string,\n' +
+              '    "strengths": string,\n' +
+              '    "risks": string\n' +
+              "  },\n" +
+              '  "bullets": {\n' +
+              '    "overview": string,\n' +
+              '    "improved_examples": string\n' +
+              "  },\n" +
+              '  "humanize": {\n' +
+              '    "summary": string,\n' +
+              '    "rewritten_resume": string\n' +
+              "  },\n" +
+              '  "match": {\n' +
+              '    "alignment": string,\n' +
+              '    "missing_keywords": string,\n' +
+              '    "suggested_edits": string\n' +
+              "  }\n" +
+              "}"
+          }
+        ]
+      };
+
+      setStatus("loading", "Running " + mode + " analysis…");
+      apiStatusLabelEl.textContent = "Groq proxy: calling…";
+      runAllButton.disabled = true;
+      atsOnlyButton.disabled = true;
+      bulletsOnlyButton.disabled = true;
+      humanizeOnlyButton.disabled = true;
+
+      try {
+        const response = await fetch("/.netlify/functions/groq-proxy", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          throw new Error("HTTP " + response.status);
+        }
+
+        const data = await response.json();
+        const content = data?.choices?.[0]?.message?.content || "";
+        let parsed;
+        try {
+          parsed = JSON.parse(content);
+        } catch (err) {
+          // fallback: show raw content
+          parsed = null;
+        }
+
+        if (!parsed) {
+          lastAIResult = {
+            raw: content
+          };
+        } else {
+          lastAIResult = parsed;
+        }
+
+        apiStatusLabelEl.textContent = "Groq proxy: OK";
+        setStatus("idle", "Done · switch tabs to explore results");
+        renderOutput();
+      } catch (err) {
+        console.error(err);
+        apiStatusLabelEl.textContent = "Groq proxy: error";
+        setStatus("error", "Error calling AI · check Netlify function");
+        outputContentEl.innerText =
+          "AI request failed.\n\n" +
+          "If this keeps happening, confirm that:\n" +
+          "• /.netlify/functions/groq-proxy is deployed\n" +
+          "• Your Groq API key is valid\n" +
+          "• CORS is allowed for this origin.";
+      } finally {
+        runAllButton.disabled = false;
+        atsOnlyButton.disabled = false;
+        bulletsOnlyButton.disabled = false;
+        humanizeOnlyButton.disabled = false;
+      }
     }
 
-    // Fallback: try to stringify a reasonable field
-    if (typeof data === "string") return data;
-    if (data.output && Array.isArray(data.output) && data.output[0]) return data.output[0].text || JSON.stringify(data.output[0]);
-    return JSON.stringify(data);
-  } catch (e) {
-    return "AI parsing error.";
-  }
-}
+    // ---------- RENDER OUTPUT ----------
+    function renderOutput() {
+      const result = lastAIResult;
 
-/* HERO BULLET PREVIEW */
-async function runHeroBullet() {
-  const input = document.getElementById("heroBulletInput").value.trim();
-  const out = document.getElementById("heroBulletOutput");
-  const status = document.getElementById("heroBulletStatus");
-  if (!input) { status.textContent = "Type a bullet first."; return; }
-  out.style.display = "block";
-  out.textContent = "Improving bullet with AI...";
-  status.textContent = "Thinking...";
-  const prompt = `Rewrite this single resume bullet to be clearer, more specific, and more impactful. Keep it truthful. Add light metrics only if they are implied. Make it human.\n\nBullet: ${input}`;
-  try {
-    const improved = await callAI(prompt);
-    out.textContent = improved;
-    status.textContent = "Done.";
-  } catch (e) {
-    out.textContent = "AI error: " + (e.message || e);
-    status.textContent = "Something went wrong.";
-  }
-}
+      if (!result) {
+        // default placeholder
+        scoreChipEl.style.display = "none";
+        scoreBarFillEl.style.width = "0%";
+        outputHeaderLabelEl.textContent = "ATS score & breakdown";
+        outputContentEl.innerHTML =
+          '<div class="output-placeholder">' +
+          "Run a full analysis to see:\n\n" +
+          "• ATS score and why you got it\n" +
+          "• Bullet‑by‑bullet improvements with impact and metrics\n" +
+          "• A more human, less robotic version of your resume\n" +
+          "• Job match insights and missing keywords" +
+          "</div>";
+        return;
+      }
 
-/* ATS SCORE (HYBRID AI) */
-async function runAtsScore() {
-  const resumeText = document.getElementById("resumeInput").value.trim();
-  const scoreValue = document.getElementById("atsScoreValue");
-  const scoreLabel = document.getElementById("atsScoreLabel");
-  const out = document.getElementById("atsScoreOutput");
-  if (!resumeText) { scoreLabel.textContent = "Paste your resume in the section below first."; return; }
-  scoreLabel.textContent = "Analyzing with AI...";
-  out.style.display = "block";
-  out.textContent = "Generating ATS score and breakdown...";
-  const prompt = `You are an ATS and resume expert. 1) Give this resume an overall ATS score from 0 to 100. 2) Briefly explain why. 3) Provide 3 strengths and 3 opportunities to improve. 4) Keep it concise and skimmable.\n\nResume:\n${resumeText}`;
-  try {
-    const result = await callAI(prompt);
-    out.textContent = result;
+      // If we only have raw text (JSON parse failed)
+      if (result.raw) {
+        scoreChipEl.style.display = "none";
+        scoreBarFillEl.style.width = "0%";
+        outputHeaderLabelEl.textContent = "Raw AI response";
+        outputContentEl.innerText = result.raw;
+        return;
+      }
 
-    // Best-effort numeric extraction
-    const match = result.match(/(\d{1,3})/);
-    let score = 75;
-    if (match) {
-      const n = parseInt(match[1], 10);
-      if (!isNaN(n) && n >= 0 && n <= 100) score = n;
+      if (activeOutputMode === "ats") {
+        const ats = result.ats || {};
+        const score = typeof ats.score === "number" ? ats.score : null;
+        const summary = ats.summary || "";
+        const strengths = ats.strengths || "";
+        const risks = ats.risks || "";
+
+        outputHeaderLabelEl.textContent = "ATS score & breakdown";
+
+        if (score !== null) {
+          scoreChipEl.style.display = "inline-flex";
+          scoreChipValueEl.textContent = score;
+          const clamped = Math.max(0, Math.min(100, score));
+          scoreBarFillEl.style.width = clamped + "%";
+        } else {
+          scoreChipEl.style.display = "none";
+          scoreBarFillEl.style.width = "0%";
+        }
+
+        outputContentEl.innerText =
+          "Summary:\n" + summary + "\n\n" +
+          "Strengths:\n" + strengths + "\n\n" +
+          "Risks / Concerns:\n" + risks;
+      } else if (activeOutputMode === "bullets") {
+        const bullets = result.bullets || {};
+        const overview = bullets.overview || "";
+        const improved = bullets.improved_examples || "";
+
+        scoreChipEl.style.display = "none";
+        scoreBarFillEl.style.width = "0%";
+        outputHeaderLabelEl.textContent = "Bullet improvements";
+
+        outputContentEl.innerText =
+          "Overview:\n" + overview + "\n\n" +
+          "Improved bullet examples:\n" + improved;
+      } else if (activeOutputMode === "humanize") {
+        const humanize = result.humanize || {};
+        const summary = humanize.summary || "";
+        const rewritten = humanize.rewritten_resume || "";
+
+        scoreChipEl.style.display = "none";
+        scoreBarFillEl.style.width = "0%";
+        outputHeaderLabelEl.textContent = "Humanized resume";
+
+        outputContentEl.innerText =
+          "What changed:\n" + summary + "\n\n" +
+          "Humanized version:\n" + rewritten;
+      } else if (activeOutputMode === "match") {
+        const match = result.match || {};
+        const alignment = match.alignment || "";
+        const missing = match.missing_keywords || "";
+        const edits = match.suggested_edits || "";
+
+        scoreChipEl.style.display = "none";
+        scoreBarFillEl.style.width = "0%";
+        outputHeaderLabelEl.textContent = "Job match insights";
+
+        outputContentEl.innerText =
+          "Overall alignment:\n" + alignment + "\n\n" +
+          "Missing or weak keywords:\n" + missing + "\n\n" +
+          "Suggested edits:\n" + edits;
+      }
     }
-    scoreValue.textContent = score;
-    scoreLabel.textContent = "Estimated ATS score based on clarity, keywords, structure, and impact.";
 
-    // Update bars roughly based on score
-    const clarity = document.getElementById("atsBarClarity");
-    const keywords = document.getElementById("atsBarKeywords");
-    const structure = document.getElementById("atsBarStructure");
-    const impact = document.getElementById("atsBarImpact");
-    const base = Math.max(30, score - 10);
-    clarity.style.width = Math.min(100, base + 5) + "%";
-    keywords.style.width = Math.min(100, base + 10) + "%";
-    structure.style.width = Math.min(100, base) + "%";
-    impact.style.width = Math.min(100, base + 8) + "%";
-  } catch (e) {
-    out.textContent = "AI error: " + (e.message || e);
-    scoreLabel.textContent = "Could not analyze. Try again.";
-  }
-}
+    // ---------- BUTTON HANDLERS ----------
+    runAllButton.addEventListener("click", () => callAI("full"));
+    atsOnlyButton.addEventListener("click", () => {
+      activeOutputMode = "ats";
+      outputTabs.forEach((t) => {
+        t.classList.toggle("active", t.getAttribute("data-output-mode") === "ats");
+      });
+      callAI("ats");
+    });
+    bulletsOnlyButton.addEventListener("click", () => {
+      activeOutputMode = "bullets";
+      outputTabs.forEach((t) => {
+        t.classList.toggle("active", t.getAttribute("data-output-mode") === "bullets");
+      });
+      callAI("bullets");
+    });
+    humanizeOnlyButton.addEventListener("click", () => {
+      activeOutputMode = "humanize";
+      outputTabs.forEach((t) => {
+        t.classList.toggle("active", t.getAttribute("data-output-mode") === "humanize");
+      });
+      callAI("humanize");
+    });
 
-/* BULLET IMPROVER */
-async function runBulletImprover() {
-  const input = document.getElementById("bulletInput").value.trim();
-  const out = document.getElementById("bulletOutput");
-  if (!input) { out.textContent = "Paste a bullet first."; return; }
-  out.textContent = "Improving bullet with AI...";
-  const prompt = `Rewrite this resume bullet to be clearer, more specific, and more impactful. Keep it truthful. Do not invent responsibilities or achievements.\n\nOriginal bullet: ${input}`;
-  try {
-    const improved = await callAI(prompt);
-    out.textContent = improved;
-  } catch (e) {
-    out.textContent = "AI error: " + (e.message || e);
-  }
-}
+    copyActiveButton.addEventListener("click", async () => {
+      const text = outputContentEl.innerText || "";
+      if (!text.trim()) {
+        showToast("Nothing to copy yet.");
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast("Active view copied to clipboard.");
+      } catch {
+        showToast("Clipboard blocked by browser.");
+      }
+    });
 
-/* MAIN REWRITE (FULL AI) */
-async function runRewrite() {
-  const text = document.getElementById("resumeInput").value.trim();
-  const out = document.getElementById("rewriteOutput");
-  const status = document.getElementById("rewriteStatus");
-  if (!text) { status.textContent = "Paste your resume text first."; return; }
-  out.style.display = "block";
-  out.textContent = "Rewriting with AI...";
-  status.textContent = "Thinking...";
-  const prompt = `Rewrite this resume to be clearer, more human, and more impactful. Keep all facts truthful. Improve structure, clarity, and flow. Use strong but realistic language. Do not invent experience.\n\nResume:\n${text}`;
-  try {
-    const improved = await callAI(prompt);
-    out.textContent = improved;
-    status.textContent = "Done.";
-  } catch (e) {
-    out.textContent = "AI error: " + (e.message || e);
-    status.textContent = "Something went wrong.";
-  }
-}
+    insertDemoOutputButton.addEventListener("click", () => {
+      lastAIResult = {
+        ats: {
+          score: 84,
+          summary:
+            "Your resume aligns well with the role, especially on ownership, metrics, and cross‑functional collaboration.",
+          strengths:
+            "Clear impact metrics, strong progression, and relevant tools. Good mix of strategy and execution.",
+          risks:
+            "A few bullets are generic. Add more role‑specific keywords and tighten older experience."
+        },
+        bullets: {
+          overview:
+            "These bullets focus on measurable impact, ownership, and clarity while staying concise.",
+          improved_examples:
+            "• Increased qualified pipeline by 38% YoY by launching a multi‑channel campaign across paid search, paid social, and lifecycle email.\n" +
+            "• Reduced CAC by 19% by restructuring campaign targeting, implementing creative testing, and partnering with sales on lead quality.\n" +
+            "• Led cross‑functional squad (Product, Design, Data) to ship a new onboarding flow that improved activation by 14%."
+        },
+        humanize: {
+          summary:
+            "The tone is now more conversational and confident, while still sounding professional and grounded in data.",
+          rewritten_resume:
+            "I’m a growth‑focused marketer who loves turning messy funnels into clear, measurable wins. Over the past 5+ years, I’ve led campaigns that grew qualified pipeline by 38% YoY and reduced CAC by nearly 20%..."
+        },
+        match: {
+          alignment:
+            "Strong match on growth ownership, experimentation, and collaboration. Good fit for a performance‑driven environment.",
+          missing_keywords:
+            "Consider weaving in: lifecycle, experimentation framework, A/B testing, SQL (if applicable), and specific platforms.",
+          suggested_edits:
+            "Add a short ‘Key Skills’ section that mirrors the job description language. Tighten older roles to 1–2 bullets each."
+        }
+      };
+      renderOutput();
+      showToast("Sample output loaded.");
+    });
 
-/* UPGRADE BUTTONS */
-function upgradeStandard() { setPlan("standard"); window.location.href = STRIPE_STANDARD; }
-function upgradePro() { setPlan("pro"); window.location.href = STRIPE_PRO; }
+    downloadTextButton.addEventListener("click", () => {
+      const text = outputContentEl.innerText || "";
+      if (!text.trim()) {
+        showToast("Nothing to download yet.");
+        return;
+      }
+      const blob = new Blob([text], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "resupal-output.txt";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("Downloaded as resupal-output.txt");
+    });
 
-/* HELPERS */
-function scrollToRewrite() {
-  const el = document.getElementById("rewriteSection");
-  if (el) el.scrollIntoView({ behavior: "smooth" });
-}
+    clearResumeButton.addEventListener("click", () => {
+      resumeTextEl.value = "";
+      jobDescriptionEl.value = "";
+      updateCharCounts();
+      lastAIResult = null;
+      renderOutput();
+      setStatus("idle", "Cleared · paste your resume to start again");
+    });
+
+    heroStartButton.addEventListener("click", () => {
+      window.scrollTo({
+        top: document.getElementById("inputPanel").offsetTop - 80,
+        behavior: "smooth"
+      });
+      resumeTextEl.focus();
+    });
+
+    heroDemoButton.addEventListener("click", () => {
+      resumeTextEl.value =
+        "Senior Product Manager with 7+ years of experience leading cross‑functional teams to ship high‑impact features.\n" +
+        "Experience includes B2B SaaS, growth experiments, and zero‑to‑one product launches.\n\n" +
+        "EXPERIENCE\n" +
+        "Senior Product Manager · Acme SaaS · 2021–Present\n" +
+        "• Led launch of a new onboarding flow that increased activation by 18% and reduced time‑to‑value by 22%.\n" +
+        "• Partnered with Sales and Marketing to define ICP and improve lead quality, increasing win rate by 9%.\n" +
+        "• Built and prioritized roadmap for a 6‑person squad (Eng, Design, Data), shipping 10+ features per year.\n\n" +
+        "Product Manager · GrowthCo · 2018–2021\n" +
+        "• Ran A/B tests across pricing and packaging, improving ARPU by 11%.\n" +
+        "• Collaborated with Data to define core product metrics and dashboards.\n\n" +
+        "SKILLS\n" +
+        "Product strategy, experimentation, A/B testing, stakeholder management, SQL (basic), Figma, Jira.";
+      jobDescriptionEl.value =
+        "We’re hiring a Senior Product Manager to lead cross‑functional teams and drive growth for our B2B SaaS platform. " +
+        "You’ll own roadmap, experimentation, and go‑to‑market for key product areas. Experience with activation, retention, and pricing is a plus.";
+      updateCharCounts();
+      showToast("Demo resume and job description loaded.");
+    });
+
+    // Initial status
+    setStatus("idle", "Idle · paste your resume and click Run full analysis");
   </script>
 </body>
 </html>
