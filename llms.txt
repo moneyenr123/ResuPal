@@ -1,0 +1,24 @@
+# ResuPal
+
+> ResuPal is an AI-powered resume builder and editor that helps job seekers write, fix, and optimize their resumes to get more callbacks. Users can build resumes from scratch, paste existing resumes for instant improvement, optimize for ATS systems, and tailor content to specific job descriptions — all through a conversational AI assistant.
+
+## Pages
+
+- Landing: Hero section, animated stats, callback rate charts, feature grid, pricing
+- Auth: Email/password sign up and login, Google OAuth
+- Dashboard: Resume library, daily AI usage tracker, activity chart
+- Editor: Resume textarea with word count, autosave, AI assistant panel
+
+## AI Features
+
+- Fix & improve: Corrects grammar, strengthens phrasing, adds action verbs
+- Strengthen bullet points: Rewrites bullets with impact and quantified results
+- ATS optimizer: Keyword-matches resume to job descriptions
+- Make concise: Trims resume to one-page focus
+- Free chat: Ask anything — the AI reads your resume and responds in context
+
+## Plans
+
+- Free: 3 AI actions per day, up to 3 saved resumes, fix & improve
+- Pro: $12/mo (or $7/mo billed annually) — unlimited AI, unlimited resumes, ATS optimizer, job tailoring, chat assistant, priority support
+- Teams: $29/mo (or $17/mo billed annually) — everything in Pro, up to 10 seats, team dashboard, bulk resume review, custom branding
